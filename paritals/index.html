@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website - BenevolentClass</title>
+    <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="styles/intro.css">
+    <link rel="stylesheet" href="styles/first.css">
+</head>
+<body>
+    <header>
+        <nav id="main-nav" style="display: none;"> <!-- Nav utama, awalnya sembunyi untuk intro -->
+            <div class="nav-left">
+                <img src="img/logo.png" alt="Logo" class="nav-logo">
+                <span class="nav-text">Kelas 8 Benevolent</span>
+            </div>
+            <div class="nav-right">
+                <a href="index.html" class="active">🏠 Main Menu</a>
+                <a href="prestasi.html">🏆 Prestasi</a>
+                <a href="karya-siswa.html">🎨 Karya Siswa</a>
+                <a href="tentang-sekolah.html">🏫 Tentang Sekolah</a>
+                <a id="setting" href="settings.html">⚙️ Settings</a> <!-- Link ke halaman admin -->
+            </div>
+        </nav>
+    </header>
+
+    <div id="intro">
+        <!-- Elemen animasi intro ... -->
+        <img id="logo" src="img/logo.png" alt="Logo Kelas">
+        <div id="text-container">
+            <div id="benevolent">8 BENEVOLENT</div>
+            <div id="class">CLASS</div>
+            <div id="tagline1">Cerdas</div>
+            <div id="tagline2">Kompak</div>
+            <div id="tagline3">Berprestasi</div>
+            <div id="akhir">Benevolent Class</div>
+        </div>
+    </div>
+    <main>
+        <h2>Main Menu</h2>
+        <div class="container-warpper">
+            <div class="wrap">
+            <h1 style="text-align: left; border-bottom: #007bff 2px solid; display: inline-block;">Prakata Kami</h1>
+            <p style="text-align: justify;">Puji syukur atas rahmat tuhan YME yang telah di berikan kepada kita semua, Dengan ini kami anggota kelas 8B membuat situs ini untuk memberikan informasi seputar Benevolent. Benevolent adalah salah satu kelas di SMP Negeri 1 Godean, yang saat ini di Pimpin oleh Syahda Sita Saputri dan wakilnya Hanifa Naura Putri, yang dimana Kata Benevolent sendiri memiliki arti Penuh dengan kebajikan, dengan julukan itu kami berharap kelas ini menjadi sebuah kelas yang penuh akan kebajikan serta dapat berprestasi, berbudi pekerti, dan memiliki solidaritas yang baik. </p>
+           </div>
+           <div class="wrap">
+            <h1 style="text-align: left; border-bottom: #007bff 2px solid; display: inline-block;">Nama Nama Siswa</h1>
+            <div class="container">
+                <h6 style="text-align: center; margin-bottom: 10px;">Perempuan</h6>
+                <div class="animated-text">Intan Afifah Nabila Syifa Zema Cathrine Diah Embun Galuh Naura Janiba Kaira Rindu Nurul Ratir Khusna Zahra Sita</div>
+            </div>
+           </div>
+        </div>
+        
+        <h4 style="text-align: center; border-bottom: #007bff 2px solid; display: inline-block;">Selamat belajar dan berkreasi!</h4>
+        <img src="img/p-d-k-b-3.png" alt="Berprestasi Berbudi Pekerti & Solidaritas tanpa batas" style="width: 100%; max-width: 600px; display: block; margin: 20px auto; border-radius: 10px;">
+        <div id='text_walikelas'>Wali Kelas</div>
+        - Ibu Fresta Svara Kusrian, S.Pd
+        <div id='text_pengurus'>Pengurus Kelas</div>
+        Ketua Kelas       :  Syahda Sita Saputri <br>
+        Wakil Ketua Kelas : Hanifa Naura Putri <br>
+        <h3 style="margin-bottom: 1px; border-bottom: #007bff 2px solid; display: inline-block; font-size: small;">Bendahara</h3>  <br>    
+        1. Radhitya Septian Waradana <br>
+        2. Embun Kinanthi Alsa Maheswari <br>
+        <h3 style="margin-bottom: 1px; border-bottom: #007bff 2px solid; display: inline-block; font-size: small;">Sekretaris</h3>  <br>
+        1. Affan Eka Pradybta <br>
+        2.Kamaniya Rindu Azkadina <br>
+        <h3 style="margin-bottom: 1px; border-bottom: #007bff 2px solid; display: inline-block; font-size: small;">MPK</h3>  <br>
+        1. Raydarkahyan Nusantara Alvaro Widhiarto <br>
+        2. Asyifa Najwa Fadhila 
+    </main>
+    <footer>
+        © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const intro = document.getElementById('intro');
+            const nav = document.getElementById('main-nav');
+            const body = document.body;
+
+            // Cek sessionStorage apakah intro sudah pernah ditampilkan di sesi ini
+            if (sessionStorage.getItem('introShown')) {
+                // Jika sudah pernah, langsung sembunyikan intro dan tampilkan nav & main content
+                intro.style.display = 'none';
+                nav.style.display = 'flex';
+                body.classList.add('loaded'); // buat main content langsung terlihat
+            } else {
+                // Tampilkan intro, sembunyikan nav
+                intro.style.display = 'flex';
+                nav.style.display = 'none';
+
+                // Setelah animasi intro selesai (12 detik), sembunyikan intro dan tampilkan nav/main
+                setTimeout(function() {
+                    intro.style.display = 'none';
+                    nav.style.display = 'flex';
+                    body.classList.add('loaded'); // menampilkan main content dengan fade in
+                    sessionStorage.setItem('introShown', 'true'); // tandai sudah tampil intro
+                }, 12000); // 12000 ms = 12 detik durasi animasi intro
+            }
+        });
+    </script>
+</body>
+</html>

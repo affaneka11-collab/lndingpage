@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website - BenevolentClass</title>
+    <link rel="stylesheet" href="styles/first.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <img src="img/logo.png" alt="Logo" class="nav-logo">
+                <span class="nav-text">Kelas 8 Benevolent</span>
+            </div>
+            <div class="nav-right">
+                <a href="index.html">🏠 Main Menu</a>
+                <a href="prestasi.html">🏆 Prestasi</a>
+                <a href="karya-siswa.html" class="active">🎨 Karya Siswa</a>
+                <a href="tentang-sekolah.html">🏫 Tentang Sekolah</a>
+                <a id="setting" href="settings.html">⚙️   Settings</a>
+            </div>
+        </nav>
+    </header>
+    <main>  
+        <h2>Karya Siswa</h2>
+        <div class="warpper">
+            <ul class="karya-list" id="karyaList">
+                <!-- List karya akan dimuat di sini via JS -->
+            </ul>
+            <p id="noKarya">Belum ada karya siswa yang ditambahkan.</p>
+        </div>
+    </main>
+    <footer>
+        © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
+    </footer>
+    <!-- Modal untuk detail karya -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDesc"></p>
+        </div>
+    </div>
+    <script>
+        // Fungsi untuk memuat karya dari localStorage
+        function loadKarya() {
+            const karya = JSON.parse(localStorage.getItem('karya')) || [];
+            const list = document.getElementById('karyaList');
+            const noKarya = document.getElementById('noKarya');
+            list.innerHTML = '';
+            if (karya.length === 0) {
+                noKarya.style.display = 'block';
+            } else {
+                noKarya.style.display = 'none';
+                karya.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'karya-item';
+                    li.innerHTML = `
+                        <h3>${item.title}</h3>
+                        <p>${item.description.substring(0, 100)}...</p>
+                        <button onclick="showDetail('${item.title}', '${item.description}')">SELENGKAPNYA</button>
+                    `;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        // Fungsi untuk menampilkan modal detail
+        function showDetail(title, desc) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDesc').textContent = desc;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // Muat karya saat halaman load
+        window.onload = loadKarya;
+    </script>
+</body>
+</html>
