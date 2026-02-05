@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website - BenevolentClass</title>
+    <link rel="stylesheet" href="styles/first.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <img src="img/logo.png" alt="Logo" class="nav-logo">
+                <span class="nav-text">Kelas 8 Benevolent</span>
+            </div>
+            <div class="nav-right">
+                <a href="index.html">🏠 Main Menu</a>
+                <a href="prestasi.html">🏆 Prestasi</a>
+                <a href="karya-siswa.html">🎨 Karya Siswa</a>
+                <a href="tentang-sekolah.html">🏫 Tentang Sekolah</a>
+                <a id="setting" href="settings.html" class="active">⚙️   Settings</a>
+            </div>
+        </nav>
+    </header>
+    <main>  
+        <h2>Settings</h2>
+        <h1 style="border-bottom: blue 2px solid;">halaman pengaturan  interface user!</h1>
+        <div class="tombol-admin">
+            <button class="tombol-admin" onclick="requestNotificationPermission()">Login Admin</a>
+        </div>
+        <script src="script/admin.js"></script>
+    </main>
+    <footer>
+        © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
+    </footer>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Admin</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #b9b5b5;
+            background-image: url(img/Jembod1Backgrund.jpg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        .password-toggle:hover {
+            color: #007bff;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-btn {
+            background-color: #6c757d;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .leaves {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(45deg, #8bc34a, #4caf50);
+            border-radius: 50% 0 50% 0;
+            animation: fall 10s infinite linear;
+        }
+        .leaf:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+        .leaf:nth-child(2) {
+            left: 20%;
+            animation-delay: 1s;
+            animation-duration: 15s;
+        }
+        .leaf:nth-child(3) {
+            left: 30%;
+            animation-delay: 5s;
+            animation-duration: 10s;
+        }
+        .leaf:nth-child(4) {
+            left: 40%;
+            animation-delay: 3s;
+            animation-duration: 18s;
+        }
+        .leaf:nth-child(5) {
+            left: 50%;
+            animation-delay: 7s;
+            animation-duration: 14s;
+        }
+        .leaf:nth-child(6) {
+            left: 60%;
+            animation-delay: 10s;
+            animation-duration: 16s;
+        }
+        .leaf:nth-child(7) {
+            left: 70%;
+            animation-delay: 12s;
+            animation-duration: 11s;
+        }
+        .leaf:nth-child(8) {
+            left: 80%;
+            animation-delay: 3s;
+            animation-duration: 13s;
+        }
+        .leaf:nth-child(9) {
+            left: 90%;
+            animation-delay: 6s;
+            animation-duration: 17s;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login Admin</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Password" required>
+                <span class="password-toggle" id="toggleIcon" onclick="togglePassword()">&#128064;</span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <button class="back-btn" onclick="window.location.href='index.html'">Kembali ke Beranda</button>
+        <p class="error" id="errorMsg"></p>
+    </div>
+    <div class="leaves">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+    <script>
+        // Fungsi untuk menampilkan atau menyembunyikan password
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.innerHTML = 'X'; // Mata terbuka
+            } else {
+                passwordField.type = "password";
+                toggleIcon.innerHTML = '&#10004;'; // Mata tertutup
+            }
+        }
+        // Inisialisasi akun default jika belum ada
+        if (!localStorage.getItem('accounts')) {
+            const defaultAccounts = [
+                { username: "affan", password: "141210", role: "admin" },
+                { username: "mod", password: "mod123", role: "moderator" }
+            ];
+            localStorage.setItem('accounts', JSON.stringify(defaultAccounts));
+        }
+
+        // Fungsi login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            const user = accounts.find(acc => acc.username === username && acc.password === password);
+            if (user) {
+                sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+                window.location.href = "admin.html";
+            } else {
+                document.getElementById('errorMsg').textContent = "Username atau password salah!";
+            }
+        });
+    </script>
+</body>
+</html>

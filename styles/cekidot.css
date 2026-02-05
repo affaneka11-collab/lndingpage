@@ -1,0 +1,44 @@
+/* Container untuk mengatur posisi */
+.love-container {
+    position: relative;
+    width: 100px;
+    height: 90px; /* Atur tinggi agar pas */
+    margin: 50px auto; /* Pusatkan di halaman */
+}
+
+/* Kotak dasar */
+.love-container div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background-color: #e91e63; /* Warna pink */
+    border-radius: 50px 50px 0 0; /* Buat sudut atas bulat */
+    transform: rotate(-45deg); /* Putar kotak jadi miring */
+    transform-origin: 0 100%; /* Titik putar di pojok bawah kiri */
+}
+
+/* Lingkaran kiri */
+.love-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25px; /* Posisikan di samping kotak */
+    width: 50px;
+    height: 50px;
+    background-color: #e91e63;
+    border-radius: 50%; /* Jadikan lingkaran */
+}
+
+/* Lingkaran kanan */
+.love-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0; /* Posisikan di atas kotak */
+    width: 50px;
+    height: 50px;
+    background-color: #e91e63;
+    border-radius: 50%; /* Jadikan lingkaran */
+}
