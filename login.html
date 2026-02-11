@@ -195,8 +195,8 @@
         // Inisialisasi akun default jika belum ada
         if (!localStorage.getItem('accounts')) {
             const defaultAccounts = [
-                { username: "affan", password: "141210", role: "admin" },
-                { username: "mod", password: "mod123", role: "moderator" }
+                { username: "affan", password: "affaneka1412", role: "admin", delet: false },
+                { username: "mod", password: "mod123", role: "moderator", delet: false }
             ];
             localStorage.setItem('accounts', JSON.stringify(defaultAccounts));
         }
@@ -218,3 +218,4 @@
     </script>
 </body>
 </html>
+
