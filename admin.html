@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="id">`<head>
+<html lang="id">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Kelas 8 Benevolent</title>
@@ -245,10 +246,10 @@
         <nav>
             <div class="nav-left">
                 <img src="img/logo.png" alt="Logo" class="nav-logo">
-                <span class="nav-text">Admin - Kelas 8 Benevolent</span> <!-- Teks ini akan diubah dinamis -->
+                <span class="nav-text">Admin - Kelas 8 Benevolent</span>
             </div>
             <div class="nav-right">
-                <span class="user-profile">Welcome, <span id="userName"></span></span> <!-- Profil pengguna -->
+                <span class="user-profile">Welcome, <span id="userName"></span></span>
                 <a href="#" onclick="logout()">🚪 Logout</a>
             </div>
         </nav>
@@ -270,9 +271,7 @@
                     <button type="button" id="cancelPrestasiBtn" style="display: none;" onclick="cancelEdit('prestasi')">Batal</button>
                 </form>
                 <h3>Daftar Prestasi</h3>
-                <ul class="prestasi-list" id="prestasiList">
-                    <!-- List prestasi akan dimuat di sini via JS -->
-                </ul>
+                <ul class="prestasi-list" id="prestasiList"></ul>
                 <p id="noPrestasi">Belum ada prestasi yang ditambahkan.</p>
             </div>
             <div id="karya-section" class="section">
@@ -284,9 +283,7 @@
                     <button type="button" id="cancelKaryaBtn" style="display: none;" onclick="cancelEdit('karya')">Batal</button>
                 </form>
                 <h3>Daftar Karya Siswa</h3>
-                <ul class="karya-list" id="karyaList">
-                    <!-- List karya akan dimuat di sini via JS -->
-                </ul>
+                <ul class="karya-list" id="karyaList"></ul>
                 <p id="noKarya">Belum ada karya siswa yang ditambahkan.</p>
             </div>
             <div id="moderator-section" class="section">
@@ -300,13 +297,9 @@
                     <button type="button" id="cancelModBtn" style="display: none;" onclick="cancelEdit('moderator')">Batal</button>
                 </form>
                 <h4>Daftar Moderator</h4>
-                <ul class="moderator-list" id="moderatorList">
-                    <!-- List moderator akan dimuat di sini -->
-                </ul>
+                <ul class="moderator-list" id="moderatorList"></ul>
                 <h4>Daftar Admin</h4>
-                <ul class="admin-list" id="adminList">
-                    <!-- List admin akan dimuat di sini -->
-                </ul>
+                <ul class="admin-list" id="adminList"></ul>
             </div>
         </div>
     </main>
@@ -315,42 +308,34 @@
         © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
     </footer>
     <script>
-        // Cek login dan role
+        const API_URL = 'https://deploy-npm.vercel.app/'; 
+
         const user = JSON.parse(sessionStorage.getItem('loggedInUser'));
         if (!user) {
             window.location.href = "login.html";
         }
-        // Ubah teks navigasi berdasarkan role
         document.querySelector('.nav-text').innerText = user.role === "admin" ? "Admin - Kelas 8 Benevolent" : "Moderator - Kelas 8 Benevolent";
-        // Tampilkan username di profil
         document.getElementById('userName').innerText = user.username;
         if (user.role === "admin") {
             document.getElementById('moderatorTab').style.display = 'inline-block';
         }
 
-        // Variabel untuk edit
-        let editingPrestasiIndex = -1;
-        let editingKaryaIndex = -1;
+        let editingPrestasiId = null;
+        let editingKaryaId = null;
         let editingModUsername = null;
 
-        // Fungsi logout
         function logout() {
             sessionStorage.removeItem('loggedInUser');
             window.location.href = "login.html";
         }
 
-        // Fungsi untuk beralih tab
         function showTab(tabName) {
-            // Sembunyikan semua section
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            // Tampilkan section yang dipilih
             document.getElementById(tabName + '-section').classList.add('active');
             event.target.classList.add('active');
-            // Ubah judul
             const titles = { prestasi: 'Kelola Prestasi', karya: 'Kelola Karya Siswa', moderator: 'Kelola Moderator' };
             document.getElementById('pageTitle').innerText = titles[tabName];
-            // Muat data sesuai tab
             if (tabName === 'prestasi') loadPrestasi();
             else if (tabName === 'karya') loadKarya();
             else if (tabName === 'moderator' && user.role === "admin") {
@@ -359,171 +344,200 @@
             }
         }
 
-        // Fungsi untuk memuat prestasi
-        function loadPrestasi() {
-            const prestasi = JSON.parse(localStorage.getItem('prestasi')) || [];
-            const list = document.getElementById('prestasiList');
-            const noPrestasi = document.getElementById('noPrestasi');
-            list.innerHTML = '';
-            if (prestasi.length === 0) {
-                noPrestasi.style.display = 'block';
-            } else {
-                noPrestasi.style.display = 'none';
-                prestasi.forEach((item, index) => {
+        async function loadPrestasi() {
+            try {
+                console.log('Loading prestasi...');
+                const response = await fetch(`${API_URL}/prestasi`);
+                const prestasi = await response.json();
+                console.log('Prestasi data:', prestasi);
+                const list = document.getElementById('prestasiList');
+                const noPrestasi = document.getElementById('noPrestasi');
+                list.innerHTML = '';
+                if (prestasi.length === 0) {
+                    noPrestasi.style.display = 'block';
+                } else {
+                    noPrestasi.style.display = 'none';
+                    prestasi.forEach((item) => {
+                        const li = document.createElement('li');
+                        li.className = 'prestasi-item';
+                        li.innerHTML = `
+                            <div>
+                                <h3>${item.title}</h3>
+                                <p>${item.description}</p>
+                            </div>
+                            <div>
+                                <button class="edit-btn" onclick="editPrestasi(${item.id})">Edit</button>
+                                <button class="delete-btn" onclick="deletePrestasi(${item.id})">Hapus</button>
+                            </div>
+                        `;
+                        list.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading prestasi:', error);
+            }
+        }
+
+        async function loadKarya() {
+            try {
+                console.log('Loading karya...');
+                const response = await fetch(`${API_URL}/karya`);
+                const karya = await response.json();
+                console.log('Karya data:', karya);
+                const list = document.getElementById('karyaList');
+                const noKarya = document.getElementById('noKarya');
+                list.innerHTML = '';
+                if (karya.length === 0) {
+                    noKarya.style.display = 'block';
+                } else {
+                    noKarya.style.display = 'none';
+                    karya.forEach((item) => {
+                        const li = document.createElement('li');
+                        li.className = 'karya-item';
+                        li.innerHTML = `
+                            <div>
+                                <h3>${item.title}</h3>
+                                <p>${item.description}</p>
+                            </div>
+                            <div>
+                                <button class="edit-btn" onclick="editKarya(${item.id})">Edit</button>
+                                <button class="delete-btn" onclick="deleteKarya(${item.id})">Hapus</button>
+                            </div>
+                        `;
+                        list.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading karya:', error);
+            }
+        }
+
+        async function loadModerators() {
+            if (user.role !== "admin") return;
+            try {
+                console.log('Loading moderators...');
+                const response = await fetch(`${API_URL}/accounts`);
+                const accounts = await response.json();
+                console.log('Accounts data:', accounts);
+                const mods = accounts.filter(acc => acc.role === "moderator");
+                const list = document.getElementById('moderatorList');
+                list.innerHTML = '';
+                mods.forEach((mod) => {
                     const li = document.createElement('li');
-                    li.className = 'prestasi-item';
+                    li.className = 'moderator-item';
                     li.innerHTML = `
                         <div>
-                            <h3>${item.title}</h3>
-                            <p>${item.description}</p>
+                            <h3>${mod.username}</h3>
+                            <p>Role: Moderator | Status: ${mod.active ? 'Aktif' : 'Nonaktif'}</p>
                         </div>
                         <div>
-                            <button class="edit-btn" onclick="editPrestasi(${index})">Edit</button>
-                            <button class="delete-btn" onclick="deletePrestasi(${index})">Hapus</button>
+                            <button class="toggle-btn ${mod.active ? '' : 'inactive'}" onclick="toggleActive('${mod.username}')">${mod.active ? 'Nonaktifkan' : 'Aktifkan'}</button>
+                            <button class="edit-btn" onclick="editModerator('${mod.username}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteModerator('${mod.username}')">Hapus</button>
                         </div>
                     `;
                     list.appendChild(li);
                 });
+            } catch (error) {
+                console.error('Error loading moderators:', error);
             }
         }
 
-        // Fungsi untuk memuat moderator (hanya untuk admin)
-        function loadModerators() {
+        async function loadAdmins() {
             if (user.role !== "admin") return;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const mods = accounts.filter(acc => acc.role === "moderator");
-            const list = document.getElementById('moderatorList');
-            list.innerHTML = '';
-            mods.forEach((mod, index) => {
-                const li = document.createElement('li');
-                li.className = 'moderator-item';
-                li.innerHTML = `
-                    <div>
-                        <h3>${mod.username}</h3>
-                        <p>Role: Moderator | Status: ${mod.active ? 'Aktif' : 'Nonaktif'}</p>
-                    </div>
-                    <div>
-                        <button class="toggle-btn ${mod.active ? '' : 'inactive'}" onclick="toggleActive('${mod.username}')">${mod.active ? 'Nonaktifkan' : 'Aktifkan'}</button>
-                        <button class="edit-btn" onclick="editModerator('${mod.username}')">Edit</button>
-                        <button class="delete-btn" onclick="deleteModerator('${mod.username}')">Hapus</button>
-                    </div>
-                `;
-                list.appendChild(li);
-            });
-        }
-
-        // Fungsi untuk memuat admin (hanya untuk admin)
-        function loadAdmins() {
-            if (user.role !== "admin") return;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const admins = accounts.filter(acc => acc.role === "admin");
-            const list = document.getElementById('adminList');
-            list.innerHTML = '';
-            admins.forEach((adm, index) => {
-                const li = document.createElement('li');
-                li.className = 'admin-item';
-                li.innerHTML = `
-                    <div>
-                        <h3>${adm.username}</h3>
-                        <p>Role: Admin | Status: ${adm.active ? 'Aktif' : 'Nonaktif'}</p>
-                    </div>
-                    <div>
-                        ${adm.username !== user.username ? `<button class="toggle-btn ${adm.active ? '' : 'inactive'}" onclick="toggleActive('${adm.username}')">${adm.active ? 'Nonaktifkan' : 'Aktifkan'}</button>` : ''}
-                        ${adm.username !== user.username ? `<button class="edit-btn" onclick="editAdmin('${adm.username}')">Edit</button>` : ''}
-                        ${adm.username !== user.username ? `<button class="delete-btn" onclick="deleteAdmin('${adm.username}')">Hapus</button>` : '<span>(Kamu)</span>'}
-                    </div>
-                `;
-                list.appendChild(li);
-            });
-        }
-
-        // Fungsi untuk memuat karya siswa
-        function loadKarya() {
-            const karya = JSON.parse(localStorage.getItem('karya')) || [];
-            const list = document.getElementById('karyaList');
-            const noKarya = document.getElementById('noKarya');
-            list.innerHTML = '';
-            if (karya.length === 0) {
-                noKarya.style.display = 'block';
-            } else {
-                noKarya.style.display = 'none';
-                karya.forEach((item, index) => {
+            try {
+                console.log('Loading admins...');
+                const response = await fetch(`${API_URL}/accounts`);
+                const accounts = await response.json();
+                console.log('Accounts data:', accounts);
+                const admins = accounts.filter(acc => acc.role === "admin");
+                const list = document.getElementById('adminList');
+                list.innerHTML = '';
+                admins.forEach((adm) => {
                     const li = document.createElement('li');
-                    li.className = 'karya-item';
+                    li.className = 'admin-item';
                     li.innerHTML = `
                         <div>
-                            <h3>${item.title}</h3>
-                            <p>${item.description}</p>
+                            <h3>${adm.username}</h3>
+                            <p>Role: Admin | Status: ${adm.active ? 'Aktif' : 'Nonaktif'}</p>
                         </div>
                         <div>
-                            <button class="edit-btn" onclick="editKarya(${index})">Edit</button>
-                            <button class="delete-btn" onclick="deleteKarya(${index})">Hapus</button>
+                            ${adm.username !== user.username ? `<button class="toggle-btn ${adm.active ? '' : 'inactive'}" onclick="toggleActive('${adm.username}')">${adm.active ? 'Nonaktifkan' : 'Aktifkan'}</button>` : ''}
+                            ${adm.username !== user.username ? `<button class="edit-btn" onclick="editAdmin('${adm.username}')">Edit</button>` : ''}
+                            ${adm.username !== user.username ? `<button class="delete-btn" onclick="deleteAdmin('${adm.username}')">Hapus</button>` : '<span>(Kamu)</span>'}
                         </div>
                     `;
                     list.appendChild(li);
                 });
+            } catch (error) {
+                console.error('Error loading admins:', error);
             }
         }
 
-        // Fungsi edit prestasi
-        function editPrestasi(index) {
-            const prestasi = JSON.parse(localStorage.getItem('prestasi')) || [];
-            const item = prestasi[index];
-            document.getElementById('title').value = item.title;
-            document.getElementById('description').value = item.description;
-            document.getElementById('prestasiSubmitBtn').textContent = 'Update Prestasi';
-            document.getElementById('prestasiFormTitle').textContent = 'Edit Prestasi';
-            document.getElementById('cancelPrestasiBtn').style.display = 'inline-block';
-            editingPrestasiIndex = index;
+        function editPrestasi(id) {
+            fetch(`${API_URL}/prestasi/${id}`)
+                .then(response => response.json())
+                .then(item => {
+                    document.getElementById('title').value = item.title;
+                    document.getElementById('description').value = item.description;
+                    document.getElementById('prestasiSubmitBtn').textContent = 'Update Prestasi';
+                    document.getElementById('prestasiFormTitle').textContent = 'Edit Prestasi';
+                    document.getElementById('cancelPrestasiBtn').style.display = 'inline-block';
+                    editingPrestasiId = id;
+                })
+                .catch(error => console.error('Error fetching prestasi:', error));
         }
 
-        // Fungsi edit karya
-        function editKarya(index) {
-            const karya = JSON.parse(localStorage.getItem('karya')) || [];
-            const item = karya[index];
-            document.getElementById('karyaTitle').value = item.title;
-            document.getElementById('karyaDescription').value = item.description;
-            document.getElementById('karyaSubmitBtn').textContent = 'Update Karya';
-            document.getElementById('karyaFormTitle').textContent = 'Edit Karya Siswa';
-            document.getElementById('cancelKaryaBtn').style.display = 'inline-block';
-            editingKaryaIndex = index;
+        function editKarya(id) {
+            fetch(`${API_URL}/karya/${id}`)
+                .then(response => response.json())
+                .then(item => {
+                    document.getElementById('karyaTitle').value = item.title;
+                    document.getElementById('karyaDescription').value = item.description;
+                    document.getElementById('karyaSubmitBtn').textContent = 'Update Karya';
+                    document.getElementById('karyaFormTitle').textContent = 'Edit Karya Siswa';
+                    document.getElementById('cancelKaryaBtn').style.display = 'inline-block';
+                    editingKaryaId = id;
+                })
+                .catch(error => console.error('Error fetching karya:', error));
         }
 
-        // Fungsi edit moderator
         function editModerator(username) {
             if (user.role !== "admin") {
                 alert("Akses ditolak!");
                 return;
             }
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const mod = accounts.find(acc => acc.username === username);
-            document.getElementById('modUsername').value = mod.username;
-            document.getElementById('modPassword').value = mod.password;
-            document.getElementById('modActive').checked = mod.active;
-            document.getElementById('modSubmitBtn').textContent = 'Update Moderator';
-            document.getElementById('modFormTitle').textContent = 'Edit Moderator';
-            document.getElementById('cancelModBtn').style.display = 'inline-block';
-            editingModUsername = username;
+            fetch(`${API_URL}/accounts/${username}`)
+                .then(response => response.json())
+                .then(account => {
+                    document.getElementById('modUsername').value = account.username;
+                    document.getElementById('modActive').checked = account.active;
+                    document.getElementById('modSubmitBtn').textContent = 'Update Moderator';
+                    document.getElementById('modFormTitle').textContent = 'Edit Moderator';
+                    document.getElementById('cancelModBtn').style.display = 'inline-block';
+                    editingModUsername = username;
+                })
+                .catch(error => console.error('Error fetching moderator:', error));
         }
 
-        // Fungsi edit admin
         function editAdmin(username) {
             if (user.role !== "admin" || username === user.username) {
                 alert("Akses ditolak!");
                 return;
             }
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const adm = accounts.find(acc => acc.username === username);
-            document.getElementById('modUsername').value = adm.username;
-            document.getElementById('modPassword').value = adm.password;
-            document.getElementById('modActive').checked = adm.active;
-            document.getElementById('modSubmitBtn').textContent = 'Update Admin';
-            document.getElementById('modFormTitle').textContent = 'Edit Admin';
-            document.getElementById('cancelModBtn').style.display = 'inline-block';
-            editingModUsername = username;
+            fetch(`${API_URL}/accounts/${username}`)
+                .then(response => response.json())
+                .then(account => {
+                    document.getElementById('modUsername').value = account.username;
+                    document.getElementById('modActive').checked = account.active;
+                    document.getElementById('modSubmitBtn').textContent = 'Update Admin';
+                    document.getElementById('modFormTitle').textContent = 'Edit Admin';
+                    document.getElementById('cancelModBtn').style.display = 'inline-block';
+                    editingModUsername = username;
+                })
+                .catch(error => console.error('Error fetching admin:', error));
         }
 
-        // Fungsi cancel edit
         function cancelEdit(type) {
             if (type === 'prestasi') {
                 document.getElementById('title').value = '';
@@ -531,179 +545,200 @@
                 document.getElementById('prestasiSubmitBtn').textContent = 'Tambah Prestasi';
                 document.getElementById('prestasiFormTitle').textContent = 'Tambah Prestasi Baru';
                 document.getElementById('cancelPrestasiBtn').style.display = 'none';
-                editingPrestasiIndex = -1;
+                editingPrestasiId = null;
             } else if (type === 'karya') {
                 document.getElementById('karyaTitle').value = '';
                 document.getElementById('karyaDescription').value = '';
                 document.getElementById('karyaSubmitBtn').textContent = 'Tambah Karya';
                 document.getElementById('karyaFormTitle').textContent = 'Tambah Karya Siswa Baru';
                 document.getElementById('cancelKaryaBtn').style.display = 'none';
-                editingKaryaIndex = -1;
+                editingKaryaId = null;
             } else if (type === 'moderator') {
                 document.getElementById('modUsername').value = '';
                 document.getElementById('modPassword').value = '';
                 document.getElementById('modActive').checked = true;
-                document.getElementById('modSubmitBtn').textContent = 'Tambah Moderator';
+                document.getElementById('modSubmitBtn').textContent = 'Tambahkan sebagai Moderator';
                 document.getElementById('modFormTitle').textContent = 'Kelola Moderator';
                 document.getElementById('cancelModBtn').style.display = 'none';
                 editingModUsername = null;
             }
         }
 
-        // Fungsi untuk menambah/update prestasi
-        document.getElementById('addForm').addEventListener('submit', function(e) {
+        document.getElementById('addForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
-            const prestasi = JSON.parse(localStorage.getItem('prestasi')) || [];
-            if (editingPrestasiIndex >= 0) {
-                // Update
-                prestasi[editingPrestasiIndex] = { title, description };
-                editingPrestasiIndex = -1;
-            } else {
-                // Add
-                prestasi.push({ title, description });
-            }
-            localStorage.setItem('prestasi', JSON.stringify(prestasi));
-            cancelEdit('prestasi');
-            loadPrestasi();
-        });
-
-        // Fungsi untuk menambah/update moderator
-        document.getElementById('addModForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            const username = document.getElementById('modUsername').value;
-            const password = document.getElementById('modPassword').value;
-            const active = document.getElementById('modActive').checked;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            if (editingModUsername) {
-                // Update
-                const index = accounts.findIndex(acc => acc.username === editingModUsername);
-                if (index >= 0) {
-                    accounts[index] = { username, password, role: accounts[index].role, active };
+            try {
+                if (editingPrestasiId) {
+                    await fetch(`${API_URL}/prestasi/${editingPrestasiId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description })
+                    });
+                } else {
+                    await fetch(`${API_URL}/prestasi`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description })
+                    });
                 }
-                editingModUsername = null;
-            } else {
-                // Add
-                if (accounts.find(acc => acc.username === username)) {
-                    alert("Username sudah ada!");
-                    return;
-                }
-                accounts.push({ username, password, role: "moderator", active });
+                cancelEdit('prestasi');
+                loadPrestasi();
+            } catch (error) {
+                console.error('Error saving prestasi:', error);
             }
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            cancelEdit('moderator');
-            loadModerators();
-            loadAdmins();
         });
 
-        // Fungsi untuk menambah admin (hanya admin)
-        document.getElementById('addAdminBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            const username = document.getElementById('modUsername').value;
-            const password = document.getElementById('modPassword').value;
-            const active = document.getElementById('modActive').checked;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            if (accounts.find(acc => acc.username === username)) {
-                alert("Username sudah ada!");
-                return;
-            }
-            accounts.push({ username, password, role: "admin", active });
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            document.getElementById('modUsername').value = '';
-            document.getElementById('modPassword').value = '';
-            document.getElementById('modActive').checked = true;
-            loadAdmins();
-        });
-
-        // Fungsi untuk menambah/update karya siswa
-        document.getElementById('addKaryaForm').addEventListener('submit', function(e) {
+        document.getElementById('addKaryaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const title = document.getElementById('karyaTitle').value;
             const description = document.getElementById('karyaDescription').value;
-            const karya = JSON.parse(localStorage.getItem('karya')) || [];
-            if (editingKaryaIndex >= 0) {
-                // Update
-                karya[editingKaryaIndex] = { title, description };
-                editingKaryaIndex = -1;
-            } else {
-                // Add
-                karya.push({ title, description });
+            try {
+                if (editingKaryaId) {
+                    await fetch(`${API_URL}/karya/${editingKaryaId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description })
+                    });
+                } else {
+                    await fetch(`${API_URL}/karya`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, description })
+                    });
+                }
+                cancelEdit('karya');
+                loadKarya();
+            } catch (error) {
+                console.error('Error saving karya:', error);
             }
-            localStorage.setItem('karya', JSON.stringify(karya));
-            cancelEdit('karya');
-            loadKarya();
         });
 
-        // Fungsi untuk menghapus prestasi
-        function deletePrestasi(index) {
+        document.getElementById('addModForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (user.role !== "admin") {
+                alert("Akses ditolak!");
+                return;
+            }
+            const username = document.getElementById('modUsername').value;
+            const password = document.getElementById('modPassword').value;
+            const active = document.getElementById('modActive').checked;
+            try {
+                if (editingModUsername) {
+                    await fetch(`${API_URL}/accounts/${editingModUsername}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password, role: 'moderator', active })
+                    });
+                } else {
+                    await fetch(`${API_URL}/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password, role: 'moderator' })
+                    });
+                }
+                cancelEdit('moderator');
+                loadModerators();
+                loadAdmins();
+            } catch (error) {
+                console.error('Error saving moderator:', error);
+            }
+        });
+
+        document.getElementById('addAdminBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (user.role !== "admin") {
+                alert("Akses ditolak!");
+                return;
+            }
+            const username = document.getElementById('modUsername').value;
+            const password = document.getElementById('modPassword').value;
+            try {
+                await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role: 'admin' })
+                });
+                document.getElementById('modUsername').value = '';
+                document.getElementById('modPassword').value = '';
+                document.getElementById('modActive').checked = true;
+                loadAdmins();
+            } catch (error) {
+                console.error('Error adding admin:', error);
+            }
+        });
+
+        async function deletePrestasi(id) {
             if (!confirm("Apakah Anda yakin ingin menghapus prestasi ini?")) return;
-            const prestasi = JSON.parse(localStorage.getItem('prestasi')) || [];
-            prestasi.splice(index, 1);
-            localStorage.setItem('prestasi', JSON.stringify(prestasi));
-            loadPrestasi();
+            try {
+                await fetch(`${API_URL}/prestasi/${id}`, { method: 'DELETE' });
+                loadPrestasi();
+            } catch (error) {
+                console.error('Error deleting prestasi:', error);
+            }
         }
 
-        // Fungsi untuk menghapus moderator (hanya admin)
-        function deleteModerator(username) {
+        async function deleteKarya(id) {
+            if (!confirm("Apakah Anda yakin ingin menghapus karya siswa ini?")) return;
+            try {
+                await fetch(`${API_URL}/karya/${id}`, { method: 'DELETE' });
+                loadKarya();
+            } catch (error) {
+                console.error('Error deleting karya:', error);
+            }
+        }
+
+        async function deleteModerator(username) {
             if (user.role !== "admin") {
                 alert("Akses ditolak!");
                 return;
             }
             if (!confirm("Apakah Anda yakin ingin menghapus moderator ini?")) return;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const updatedAccounts = accounts.filter(acc => acc.username !== username);
-            localStorage.setItem('accounts', JSON.stringify(updatedAccounts));
-            loadModerators();
+            try {
+                await fetch(`${API_URL}/accounts/${username}`, { method: 'DELETE' });
+                loadModerators();
+            } catch (error) {
+                console.error('Error deleting moderator:', error);
+            }
         }
 
-        // Fungsi untuk menghapus admin (hanya admin, tidak bisa hapus diri sendiri)
-        function deleteAdmin(username) {
+        async function deleteAdmin(username) {
             if (user.role !== "admin" || username === user.username) {
                 alert("Akses ditolak!");
                 return;
             }
             if (!confirm("Apakah Anda yakin ingin menghapus admin ini?")) return;
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const updatedAccounts = accounts.filter(acc => acc.username !== username);
-            localStorage.setItem('accounts', JSON.stringify(updatedAccounts));
-            loadAdmins();
+            try {
+                await fetch(`${API_URL}/accounts/${username}`, { method: 'DELETE' });
+                loadAdmins();
+            } catch (error) {
+                console.error('Error deleting admin:', error);
+            }
         }
 
-        // Fungsi untuk menghapus karya siswa
-        function deleteKarya(index) {
-            if (!confirm("Apakah Anda yakin ingin menghapus karya siswa ini?")) return;
-            const karya = JSON.parse(localStorage.getItem('karya')) || [];
-            karya.splice(index, 1);
-            localStorage.setItem('karya', JSON.stringify(karya));
-            loadKarya();
-        }
-
-        // Fungsi untuk toggle active status
-        function toggleActive(username) {
+        async function toggleActive(username) {
             if (user.role !== "admin") {
                 alert("Akses ditolak!");
                 return;
             }
-            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-            const index = accounts.findIndex(acc => acc.username === username);
-            if (index >= 0) {
-                accounts[index].active = !accounts[index].active;
-                localStorage.setItem('accounts', JSON.stringify(accounts));
-                loadModerators();
-                loadAdmins();
+            try {
+                const response = await fetch(`${API_URL}/accounts`);
+                const accounts = await response.json();
+                const account = accounts.find(acc => acc.username === username);
+                if (account) {
+                    await fetch(`${API_URL}/accounts/${username}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ role: account.role, active: !account.active })
+                    });
+                    loadModerators();
+                    loadAdmins();
+                }
+            } catch (error) {
+                console.error('Error toggling active:', error);
             }
         }
 
-        // Muat data saat halaman load
         window.onload = function() {
             loadPrestasi();
             loadKarya();
