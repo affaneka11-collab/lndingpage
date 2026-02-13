@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Kelas 8 Benevolent</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        button { padding: 5px 10px; margin: 2px; cursor: pointer; }
+        .add-form { margin-bottom: 10px; }
+        input { padding: 5px; margin: 2px; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <button onclick="logout()">Logout</button>
+
+    <div class="section">
+        <h2>Accounts</h2>
+        <div class="add-form">
+            <input type="text" id="accUsername" placeholder="Username">
+            <input type="password" id="accPassword" placeholder="Password">
+            <input type="text" id="accRole" placeholder="Role (admin/moderator)">
+            <button onclick="addAccount()">Add Account</button>
+        </div>
+        <table id="accountsTable">
+            <thead><tr><th>Username</th><th>Role</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Prestasi</h2>
+        <div class="add-form">
+            <input type="text" id="presTitle" placeholder="Title">
+            <input type="text" id="presDesc" placeholder="Description">
+            <button onclick="addPrestasi()">Add Prestasi</button>
+        </div>
+        <table id="prestasiTable">
+            <thead><tr><th>ID</th><th>Title</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Karya</h2>
+        <div class="add-form">
+            <input type="text" id="karyaTitle" placeholder="Title">
+            <input type="text" id="karyaDesc" placeholder="Description">
+            <button onclick="addKarya()">Add Karya</button>
+        </div>
+        <table id="karyaTable">
+            <thead><tr><th>ID</th><th>Title</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = 'https://kdgjpvebpgxbtdxdsaff.supabase.co/functions/v1/accounts-api';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Hn-ADpLFOMImD47sSB_8wQ_OG8vuMa1';  // Ganti jika key salah
+
+        // Cek role admin
+        const userRole = localStorage.getItem('userRole');
+        if (userRole !== 'admin') {
+            alert('Akses ditolak!');
+            window.location.href = 'login.html';
+        }
+
+        // Helper fetch dengan header
+        async function apiFetch(endpoint, options = {}) {
+            return fetch(`${API_URL}${endpoint}`, {
+                headers: {
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                ...options
+            });
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const [accRes, presRes, karyaRes] = await Promise.all([
+                    apiFetch('/accounts'),
+                    apiFetch('/prestasi'),
+                    apiFetch('/karya')
+                ]);
+                const accounts = await accRes.json();
+                const prestasi = await presRes.json();
+                const karya = await karyaRes.json();
+
+                renderTable('accountsTable', accounts, ['username', 'role', 'active'], (item) => `
+                    <button onclick="editAccount('${item.username}')">Edit</button>
+                    <button onclick="deleteAccount('${item.username}')">Delete</button>
+                `);
+                renderTable('prestasiTable', prestasi, ['id', 'title', 'description'], (item) => `
+                    <button onclick="editPrestasi(${item.id})">Edit</button>
+                    <button onclick="deletePrestasi(${item.id})">Delete</button>
+                `);
+                renderTable('karyaTable', karya, ['id', 'title', 'description'], (item) => `
+                    <button onclick="editKarya(${item.id})">Edit</button>
+                    <button onclick="deleteKarya(${item.id})">Delete</button>
+                `);
+            } catch (err) {
+                console.error('Load error:', err);
+            }
+        }
+
+        function renderTable(tableId, data, columns, actions) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = data.map(item => `<tr>${columns.map(col => `<td>${item[col]}</td>`).join('')}<td>${actions(item)}</td></tr>`).join('');
+        }
+
+        // CRUD Accounts
+        async function addAccount() {
+            const username = document.getElementById('accUsername').value;
+            const password = document.getElementById('accPassword').value;
+            const role = document.getElementById('accRole').value;
+            const res = await apiFetch('/register', { method: 'POST', body: JSON.stringify({ username, password, role }) });
+            if (res.ok) loadData();
+        }
+
+        async function editAccount(username) {
+            const newRole = prompt('New role:');
+            const newActive = confirm('Active?');
+            await apiFetch(`/accounts/${username}`, { method: 'PUT', body: JSON.stringify({ role: newRole, active: newActive }) });
+            loadData();
+        }
+
+        async function deleteAccount(username) {
+            await apiFetch(`/accounts/${username}`, { method: 'DELETE' });
+            loadData();
+        }
+
+        // CRUD Prestasi
+        async function addPrestasi() {
+            const title = document.getElementById('presTitle').value;
+            const description = document.getElementById('presDesc').value;
+            await apiFetch('/prestasi', { method: 'POST', body: JSON.stringify({ title, description }) });
+            loadData();
+        }
+
+        async function editPrestasi(id) {
+            const newTitle = prompt('New title:');
+            const newDesc = prompt('New description:');
+            await apiFetch(`/prestasi/${id}`, { method: 'PUT', body: JSON.stringify({ title: newTitle, description: newDesc }) });
+            loadData();
+        }
+
+        async function deletePrestasi(id) {
+            await apiFetch(`/prestasi/${id}`, { method: 'DELETE' });
+            loadData();
+        }
+
+        // CRUD Karya (mirip prestasi)
+        async function addKarya() {
+            const title = document.getElementById('karyaTitle').value;
+            const description = document.getElementById('karyaDesc').value;
+            await apiFetch('/karya', { method: 'POST', body: JSON.stringify({ title, description }) });
+            loadData();
+        }
+
+        async function editKarya(id) {
+            const newTitle = prompt('New title:');
+            const newDesc = prompt('New description:');
+            await apiFetch(`/karya/${id}`, { method: 'PUT', body: JSON.stringify({ title: newTitle, description: newDesc }) });
+            loadData();
+        }
+
+        async function deleteKarya(id) {
+            await apiFetch(`/karya/${id}`, { method: 'DELETE' });
+            loadData();
+        }
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        loadData();  // Load saat page load
+    </script>
+</body>
+</html>
