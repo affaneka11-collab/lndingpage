@@ -20,6 +20,7 @@
                         const card = document.createElement('div');
                         card.className = 'prestasi-card';
                         card.innerHTML = `
+                            <img src="${item.image_url}" style="width: 100%; height: auto; border-radius: 5px; margin-bottom: 10px;">
                             <h3>${item.title}</h3>
                             <p>${item.description}</p>
                         `;
