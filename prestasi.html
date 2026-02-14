@@ -14,6 +14,48 @@
             padding: 20px;
             min-height: 100vh;
         }
+        /* Tambahan CSS untuk hamburger menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-color);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-right {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--nav-bg);
+                padding: 10px 0;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            .nav-right.show {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -23,7 +65,12 @@
                 <img src="img/logo.png" alt="Logo" class="nav-logo">
                 <span class="nav-text">Kelas 8 Benevolent</span>
             </div>
-            <div class="nav-right">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-right" id="navRight">
                 <a href="index.html">🏠 Main Menu</a>
                 <a href="prestasi.html" class="active">🏆 Prestasi</a>
                 <a href="karya-siswa.html">🎨 Karya Siswa</a>
@@ -48,6 +95,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="prestasi.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburger');
+        const navRight = document.getElementById('navRight');
+        if (hamburger && navRight) {
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navRight.classList.toggle('show');
+            });
+        }
+    });
+    </script>
 </body>
 </html>
-
