@@ -7,6 +7,50 @@
     <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="styleutama.css">
     <script src="theme.js"></script>
+    <style>
+        /* Tambahan CSS untuk hamburger menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-color);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-right {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--nav-bg);
+                padding: 10px 0;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            .nav-right.show {
+                display: flex;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,7 +59,12 @@
                 <img src="img/logo.png" alt="Logo" class="nav-logo">
                 <span class="nav-text">Kelas 8 Benevolent</span>
             </div>
-            <div class="nav-right">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-right" id="navRight"> <!-- Tambahkan id="navRight" -->
                 <a href="index.html" class="active">🏠 Main Menu</a>
                 <a href="prestasi.html">🏆 Prestasi</a>
                 <a href="karya-siswa.html">🎨 Karya Siswa</a>
@@ -41,9 +90,9 @@
             </div>
         </div>
         <div class="container-warpper" id="tntngsklh">
-                <div class="wrap">
-                    <h1 >SMP Negeri 1 Godean</h1>
-                    <p style="text-align: justify;">
+            <div class="wrap">
+                <h1>SMP Negeri 1 Godean</h1>
+                <p style="text-align: justify;">
 SMP Negeri 1 Godean adalah salah satu sekolah menengah pertama negeri yang terletak di Kabupaten Sleman, Daerah Istimewa Yogyakarta, Indonesia. Sekolah ini didirikan pada tahun 1960 dan telah menjadi salah satu institusi pendidikan yang berkualitas di wilayah tersebut. Dengan motto "Unggul dalam Prestasi, Berkarakter, dan Berwawasan Lingkungan", SMP Negeri 1 Godean berkomitmen untuk memberikan pendidikan yang holistik kepada siswa-siswinya.
 
 Sekolah ini memiliki visi untuk menjadi sekolah unggul yang mampu menghasilkan lulusan yang berprestasi, berakhlak mulia, dan siap menghadapi tantangan global. Misi utamanya meliputi pengembangan potensi siswa melalui kurikulum yang inovatif, fasilitas belajar yang memadai, serta kegiatan ekstrakurikuler yang beragam seperti olahraga, seni, dan kegiatan sosial.
@@ -51,8 +100,8 @@ Sekolah ini memiliki visi untuk menjadi sekolah unggul yang mampu menghasilkan l
 Fasilitas di SMP Negeri 1 Godean meliputi ruang kelas yang nyaman, laboratorium sains dan komputer, lapangan olahraga, perpustakaan, dan kantin. Sekolah ini juga aktif dalam program lingkungan hidup, seperti penghijauan dan pengelolaan sampah, yang mendukung pendidikan berkelanjutan.
 
 Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55562.</p>                    
-                </div>
             </div>
+        </div>
         <div class="container-warpper">
             <div class="wrap">
                 <h1>Nama Nama Siswa</h1>
@@ -68,7 +117,7 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Zema Cathrine">
-                        <h3>Afifah Aliatul Jannah</h3>
+                        <h3>Afifah Aliatul jannah</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Diah Embun">
@@ -80,7 +129,7 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Janiba Kaira">
-                        <h3>Atifah Ahla Azema Putri</h3>
+                        <h3>Atifah</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Rindu Nurul">
@@ -88,7 +137,7 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Ratir Khusna">
-                        <h3>Catherine Bella Clarashinta</h3>
+                        <h3>Cetrin</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Zahra Sita">
@@ -112,7 +161,7 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Affan Eka Pradybta">
-                        <h3>Ghani Rasyid Hafiyyan</h3>
+                        <h3>Ghani Rasyid hafiyyan</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Kamaniya Rindu Azkadina">
@@ -120,15 +169,15 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Raydarkahyan Nusantara Alvaro Widhiarto">
-                        <h3>Janibariang Zendrato</h3>
+                        <h3>Raydarkahyan Nusantara Alvaro Widhiarto</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Asyifa Najwa Fadhila">
-                        <h3>Kaira Cita Antari</h3>
+                        <h3></h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 18">
-                        <h3>Kamaniya Rindu Azkadina</h3>
+                        <h3>Kamania Rindu Azkadina</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 19">
@@ -160,31 +209,31 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 26">
-                        <h3>Rahajeng Sekaring Ratri</h3>
+                        <h3>Siswa 26</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 27">
-                        <h3>Raydarkahyan Nusantara Alvaro W</h3>
+                        <h3>Siswa 27</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 28">
-                        <h3>Riadhotul Khusna</h3>
+                        <h3>Siswa 28</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 29">
-                        <h3>Ridwan Nur Aziiz</h3>
+                        <h3>Siswa 29</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 30">
-                        <h3>Rizqon Naafi`</h3>
+                        <h3>Siswa 30</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 31">
-                        <h3>Shafira Zahra Aliya Rasyid</h3>
+                        <h3>Siswa 31</h3>
                     </div>
                     <div class="siswa-card">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" alt="Siswa 32">
-                        <h3>Syahda Sita Saputri</h3>
+                        <h3>Siswa 32</h3>
                     </div>
                 </div>
             </div>
@@ -221,62 +270,66 @@ Alamat: Jl. Jae Sumantoro, Pandean, Kec. Godean, Kabupaten Sleman, Daerah Istime
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const intro = document.getElementById('intro');
-            const nav = document.getElementById('main-nav');
-            const body = document.body;
-            const logo = document.getElementById('logo');
-            const texts = document.querySelectorAll('#text-container > div');
+    const intro = document.getElementById('intro');
+    const nav = document.getElementById('main-nav');
+    const body = document.body;
+    const logo = document.getElementById('logo');
+    const texts = document.querySelectorAll('#text-container > div');
 
-                        // Cek sessionStorage apakah intro sudah pernah ditampilkan di sesi ini
-            if (sessionStorage.getItem('introShown')) {
-                // Jika sudah pernah, langsung sembunyikan intro dan tampilkan nav & main content
-                intro.style.display = 'none';
-                nav.style.display = 'flex';
-                body.classList.add('loaded');
-            } else {
-                // Tampilkan intro, sembunyikan nav
-                intro.style.display = 'flex';
-                nav.style.display = 'none';
+    // Cek sessionStorage apakah intro sudah pernah ditampilkan di sesi ini
+    if (sessionStorage.getItem('introShown')) {
+        // Jika sudah pernah, langsung sembunyikan intro dan tampilkan nav & main content
+        intro.style.display = 'none';
+        nav.style.display = 'flex';
+        body.classList.add('loaded');
+    } else {
+        // Tampilkan intro, sembunyikan nav
+        intro.style.display = 'flex';
+        nav.style.display = 'none';
 
-                // Animasi intro dengan anime.js
-                anime({
-                    targets: logo,
-                    opacity: [0, 1],
-                    scale: [0.5, 1],
-                    duration: 1000,
-                    easing: 'easeOutExpo'
-                });
-
-                anime({
-                    targets: texts,
-                    opacity: [0, 1],
-                    translateY: [20, 0],
-                    delay: anime.stagger(300, {start: 1000}),
-                    duration: 800,
-                    easing: 'easeOutExpo'
-                });
-
-                // Setelah animasi selesai (2 detik), sembunyikan intro dan tampilkan nav/main
-                setTimeout(function() {
-                    anime({
-                        targets: intro,
-                        opacity: [1, 0],
-                        duration: 1000,
-                        easing: 'easeInOutQuad',
-                        complete: function() {
-                            intro.style.display = 'none';
-                            nav.style.display = 'flex';
-                            body.classList.add('loaded');
-                            sessionStorage.setItem('introShown', 'true');
-                        }
-                    });
-                }, 2000);
-            }
+        // Animasi intro dengan anime.js
+        anime({
+            targets: logo,
+            opacity: [0, 1],
+            scale: [0.5, 1],
+            duration: 1000,
+            easing: 'easeOutExpo'
         });
+
+        anime({
+            targets: texts,
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: anime.stagger(300, {start: 1000}),
+            duration: 800,
+            easing: 'easeOutExpo'
+        });
+
+        // Setelah animasi selesai (2 detik), sembunyikan intro dan tampilkan nav/main
+        setTimeout(function() {
+            anime({
+                targets: intro,
+                opacity: [1, 0],
+                duration: 1000,
+                easing: 'easeInOutQuad',
+                complete: function() {
+                    intro.style.display = 'none';
+                    nav.style.display = 'flex';
+                    body.classList.add('loaded');
+                    sessionStorage.setItem('introShown', 'true');
+                }
+            });
+        }, 2000);
+    }
+
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navRight = document.getElementById('navRight');
+    hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navRight.classList.toggle('show');
+    });
+});
     </script>
 </body>
 </html>
-
-
-
-
