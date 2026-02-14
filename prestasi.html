@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website - BenevolentClass</title>
-    <link rel="stylesheet" href="styles/first.css">
+    <title>Prestasi - BenevolentClass</title>
+    <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="styleutama.css">
+    <style>
+        main {
+            opacity: 1;
+            margin-top: 80px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav>
+        <nav id="main-nav">
             <div class="nav-left">
                 <img src="img/logo.png" alt="Logo" class="nav-logo">
                 <span class="nav-text">Kelas 8 Benevolent</span>
@@ -18,75 +27,25 @@
                 <a href="prestasi.html" class="active">🏆 Prestasi</a>
                 <a href="karya-siswa.html">🎨 Karya Siswa</a>
                 <a href="tentang-sekolah.html">🏫 Tentang Sekolah</a>
-                <a id="setting" href="settings.html">⚙️   Settings</a> <!-- Link ke halaman admin -->
+                <a id="setting" href="settings.html">⚙️ Settings</a>
             </div>
         </nav>
     </header>
-    <main>  
-        <h2>Prestasi</h2>
-        <div class="warpper">
-            <ul class="prestasi-list" id="prestasiList">
-                <!-- List prestasi akan dimuat di sini via JS -->
-            </ul>
-            <p id="noPrestasi">Belum ada prestasi yang ditambahkan.</p>
+    <main>
+        <h2>Prestasi Kelas</h2>
+        <div class="container-warpper">
+            <p>Berikut adalah daftar prestasi yang telah diraih oleh kelas 8 Benevolent.</p>
+            <div class="prestasi-grid" id="prestasiGrid">
+                <!-- Prestasi akan dimuat di sini via JavaScript -->
+            </div>
+            <p id="noPrestasi" class="no-prestasi" style="display: none;">Belum ada prestasi yang ditambahkan.</p>
         </div>
     </main>
-    <div class="footerkuadrat"></div>
     <footer>
         © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
     </footer>
-    <!-- Modal untuk detail prestasi -->
-    <div id="detailModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle"></h3>
-            <p id="modalDesc"></p>
-        </div>
-    </div>
-    <script>
-        // Fungsi untuk memuat prestasi dari localStorage
-        function loadPrestasi() {
-            const prestasi = JSON.parse(localStorage.getItem('prestasi')) || [];
-            const list = document.getElementById('prestasiList');
-            const noPrestasi = document.getElementById('noPrestasi');
-            list.innerHTML = '';
-            if (prestasi.length === 0) {
-                noPrestasi.style.display = 'block';
-            } else {
-                noPrestasi.style.display = 'none';
-                prestasi.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'prestasi-item';
-                    li.innerHTML = `
-                        <h3>${item.title}</h3>
-                        <p>${item.description.substring(0, 100)}...</p>
-                        <button onclick="showDetail('${item.title}', '${item.description}')">SELENGKAPNYA</button>
-                    `;
-                    list.appendChild(li);
-                });
-            }
-        }
 
-        // Fungsi untuk menampilkan modal detail
-        function showDetail(title, desc) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('detailModal').style.display = 'flex';
-        }
-
-        // Fungsi untuk menutup modal
-        function closeModal() {
-            document.getElementById('detailModal').style.display = 'none';
-        }
-
-        // Muat prestasi saat halaman load
-        window.onload = loadPrestasi;
-        
-        // tampilkan subnavigasi admin saat kursor berada di tombol admin!
-        const adminLink = document.getElementById('admin');
-        adminLink.addEventListener('mouseover', () => {
-            adminLink.innerHTML = '🔧 Admin ▼<div class="subnav"><a href="admin-prestasi.html">Kelola Prestasi</a> | <a href="admin-karya.html">Kelola Karya Siswa</a></div>';
-        }); 
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="prestasi.js"></script>
 </body>
 </html>
