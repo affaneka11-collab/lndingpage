@@ -5,747 +5,296 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Kelas 8 Benevolent</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; 
-            padding: 0; 
-            background-color: #f4f4f4; 
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        nav { 
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            position: fixed; 
-            top: 0; 
-            width: 100%; 
-            z-index: 10; 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .nav-logo {
-            width: 40px;
-            height: auto;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-        .nav-text {
-            color: #333;
-            font-weight: 600;
-            font-size: 1.2em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .nav-right {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-            margin-right: 30px;
-        }
-        nav a { 
-            text-decoration: none; 
-            color: #333;
-            font-weight: 500;
-            padding: 10px 15px;
-            border-radius: 25px;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-        }
-        nav a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        nav a:hover::before {
-            left: 100%;
-        }
-        nav a:hover { 
-            background: rgba(0, 123, 255, 0.1);
-            color: #007bff; 
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-        }
-        nav a.active { 
-            background: rgba(0, 123, 255, 0.2);
-            color: #007bff; 
-            box-shadow: 0 3px 10px rgba(0, 123, 255, 0.2);
-        }
-        .user-profile {
-            color: #333;
-            font-weight: 500;
-            font-size: 1em;
-        }
-        .warpper {
-            max-width: 1200px; 
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            background-color: #e9ecef;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .tab-btn.active {
-            background-color: #007bff;
-            color: white;
-        }
-        .tab-btn:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .section {
-            display: none;
-        }
-        .section.active {
-            display: block;
-        }
-        button, input[type="button"], .btn {
-            background-color: #6d6d6d;
-            color: #fffdfd;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        input[type="button"]:hover {
-            background-color: #555555;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .prestasi-list, .moderator-list, .karya-list, .admin-list {
-            list-style: none;
-            padding: 0;
-        }
-        .prestasi-item, .moderator-item, .karya-item, .admin-item {
-            background: #f9f9f9;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .prestasi-item h3, .moderator-item h3, .karya-item h3, .admin-item h3 {
-            margin: 0 0 10px 0;
-            color: #007bff;
-        }
-        .prestasi-item p, .moderator-item p, .karya-item p, .admin-item p {
-            margin: 0;
-            color: #555;
-        }
-        .delete-btn, .edit-btn, .toggle-btn {
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            margin-left: 5px;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-        .edit-btn {
-            background-color: #ffc107;
-            color: black;
-        }
-        .edit-btn:hover {
-            background-color: #e0a800;
-        }
-        .toggle-btn {
-            background-color: #28a745;
-            color: white;
-        }
-        .toggle-btn:hover {
-            background-color: #218838;
-        }
-        .toggle-btn.inactive {
-            background-color: #6c757d;
-        }
-        .toggle-btn.inactive:hover {
-            background-color: #5a6268;
-        }
-        main {
-            opacity: 1;
-            transition: fade 1s ease-in-out;
-            margin-top: 80px;
-            padding: 20px;
-            flex: 1;
-        }
-        main h2 {
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            display: inline-block;
-            animation: fadeIn 0.7s ease-in-out 1ms both;
-        }
-        footer {
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            margin-top: auto;
-        }
-        .footerkuadrat {
-            width: 100%;
-            height: 50px;
-            background-color: #f1f1f1;
-            text-align: center;
-            line-height: 50px;
-            color: #8d8d8d;
-            border-top: 1px solid #ddd;
-        }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f4f4f4; display: flex; flex-direction: column; min-height: 100vh; }
+        nav { background: rgba(255,255,255,0.9); padding: 15px 20px; position: fixed; top: 0; width: 100%; z-index: 10; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+        .nav-logo { width: 40px; height: auto; }
+        .nav-text { color: #333; font-weight: 600; font-size: 1.2em; }
+        .nav-right { display: flex; gap: 25px; align-items: center; }
+        nav a { text-decoration: none; color: #333; font-weight: 500; padding: 10px 15px; border-radius: 25px; transition: all 0.3s; }
+        nav a:hover { background: rgba(0,123,255,0.1); color: #007bff; }
+        .user-profile { color: #333; font-weight: 500; }
+        main { margin-top: 80px; padding: 20px; flex: 1; max-width: 1200px; margin: 80px auto 0; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 8px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: #e9ecef; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: #007bff; color: white; }
+        .section { display: none; }
+        .section.active { display: block; }
+        button, .btn { background: #6d6d6d; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #555; transform: translateY(-2px); }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        .list { list-style: none; padding: 0; }
+        .item { background: #f9f9f9; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .item h3 { margin: 0 0 10px 0; color: #007bff; }
+        .item p { margin: 0; color: #555; }
+        .delete-btn { background: #dc3545; color: white; }
+        .edit-btn { background: #ffc107; color: black; }
+        .toggle-btn { background: #28a745; color: white; }
+        .toggle-btn.inactive { background: #6c757d; }
+        footer { text-align: center; padding: 10px; background: #f8f9fa; border-top: 1px solid #ddd; margin-top: auto; }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="nav-left">
-                <img src="img/logo.png" alt="Logo" class="nav-logo">
-                <span class="nav-text">Admin - Kelas 8 Benevolent</span>
-            </div>
-            <div class="nav-right">
-                <span class="user-profile">Welcome, <span id="userName"></span></span>
-                <a href="#" onclick="logout()">🚪 Logout</a>
-            </div>
-        </nav>
-    </header>
-    <main>  
+    <nav>
+        <div class="nav-left">
+            <img src="img/logo.png" alt="Logo" class="nav-logo">
+            <span class="nav-text">Admin - Kelas 8 Benevolent</span>
+        </div>
+        <div class="nav-right">
+            <span class="user-profile">Welcome, <span id="userName"></span></span>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </nav>
+    <main>
         <h2 id="pageTitle">Kelola Prestasi</h2>
-        <div class="warpper">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="showTab('prestasi')">Prestasi</button>
-                <button class="tab-btn" onclick="showTab('karya')">Karya Siswa</button>
-                <button class="tab-btn" id="moderatorTab" onclick="showTab('moderator')" style="display: none;">Moderator</button>
-            </div>
-            <div id="prestasi-section" class="section active">
-                <h3 id="prestasiFormTitle">Tambah Prestasi Baru</h3>
-                <form id="addForm">
-                    <input type="text" id="title" placeholder="Judul Prestasi" required>
-                    <textarea id="description" placeholder="Deskripsi Prestasi" rows="4" required></textarea>
-                    <button type="submit" id="prestasiSubmitBtn">Tambah Prestasi</button>
-                    <button type="button" id="cancelPrestasiBtn" style="display: none;" onclick="cancelEdit('prestasi')">Batal</button>
-                </form>
-                <h3>Daftar Prestasi</h3>
-                <ul class="prestasi-list" id="prestasiList"></ul>
-                <p id="noPrestasi">Belum ada prestasi yang ditambahkan.</p>
-            </div>
-            <div id="karya-section" class="section">
-                <h3 id="karyaFormTitle">Tambah Karya Siswa Baru</h3>
-                <form id="addKaryaForm">
-                    <input type="text" id="karyaTitle" placeholder="Judul Karya" required>
-                    <textarea id="karyaDescription" placeholder="Deskripsi Karya" rows="4" required></textarea>
-                    <button type="submit" id="karyaSubmitBtn">Tambah Karya</button>
-                    <button type="button" id="cancelKaryaBtn" style="display: none;" onclick="cancelEdit('karya')">Batal</button>
-                </form>
-                <h3>Daftar Karya Siswa</h3>
-                <ul class="karya-list" id="karyaList"></ul>
-                <p id="noKarya">Belum ada karya siswa yang ditambahkan.</p>
-            </div>
-            <div id="moderator-section" class="section">
-                <h3 id="modFormTitle">Kelola Moderator</h3>
-                <form id="addModForm">
-                    <input type="text" id="modUsername" placeholder="Username Moderator" required>
-                    <input type="password" id="modPassword" placeholder="Password Moderator" required>
-                    <label><input type="checkbox" id="modActive" checked> Aktif</label>
-                    <button type="submit" id="modSubmitBtn">Tambahkan sebagai Moderator</button>
-                    <button type="button" id="addAdminBtn">Tambahkan sebagai Admin</button>
-                    <button type="button" id="cancelModBtn" style="display: none;" onclick="cancelEdit('moderator')">Batal</button>
-                </form>
-                <h4>Daftar Moderator</h4>
-                <ul class="moderator-list" id="moderatorList"></ul>
-                <h4>Daftar Admin</h4>
-                <ul class="admin-list" id="adminList"></ul>
-            </div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('prestasi')">Prestasi</button>
+            <button class="tab-btn" onclick="showTab('karya')">Karya Siswa</button>
+            <button class="tab-btn" id="moderatorTab" onclick="showTab('moderator')" style="display: none;">Moderator</button>
+        </div>
+        <div id="prestasi-section" class="section active">
+            <h3 id="prestasiFormTitle">Tambah Prestasi Baru</h3>
+            <form id="addForm">
+                <input type="text" id="title" placeholder="Judul Prestasi" required>
+                <textarea id="description" placeholder="Deskripsi Prestasi" rows="4" required></textarea>
+                <button type="submit" id="prestasiSubmitBtn">Tambah Prestasi</button>
+                <button type="button" id="cancelPrestasiBtn" style="display: none;" onclick="cancelEdit('prestasi')">Batal</button>
+            </form>
+            <h3>Daftar Prestasi</h3>
+            <ul class="list" id="prestasiList"></ul>
+            <p id="noPrestasi">Belum ada prestasi.</p>
+        </div>
+        <div id="karya-section" class="section">
+            <h3 id="karyaFormTitle">Tambah Karya Siswa Baru</h3>
+            <form id="addKaryaForm">
+                <input type="text" id="karyaTitle" placeholder="Judul Karya" required>
+                <textarea id="karyaDescription" placeholder="Deskripsi Karya" rows="4" required></textarea>
+                <button type="submit" id="karyaSubmitBtn">Tambah Karya</button>
+                <button type="button" id="cancelKaryaBtn" style="display: none;" onclick="cancelEdit('karya')">Batal</button>
+            </form>
+            <h3>Daftar Karya Siswa</h3>
+            <ul class="list" id="karyaList"></ul>
+            <p id="noKarya">Belum ada karya.</p>
+        </div>
+        <div id="moderator-section" class="section">
+            <h3 id="modFormTitle">Kelola Moderator</h3>
+            <form id="addModForm">
+                <input type="text" id="modUsername" placeholder="Username" required>
+                <input type="password" id="modPassword" placeholder="Password" required>
+                <label><input type="checkbox" id="modActive" checked> Aktif</label>
+                <button type="submit" id="modSubmitBtn">Tambahkan sebagai Moderator</button>
+                <button type="button" id="addAdminBtn">Tambahkan sebagai Admin</button>
+                <button type="button" id="cancelModBtn" style="display: none;" onclick="cancelEdit('moderator')">Batal</button>
+            </form>
+            <h4>Daftar Moderator</h4>
+            <ul class="list" id="moderatorList"></ul>
+            <h4>Daftar Admin</h4>
+            <ul class="list" id="adminList"></ul>
         </div>
     </main>
-    <div class="footerkuadrat"></div>
-    <footer>
-        © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
-    </footer>
+    <footer>© 2025 ICT 8 Benevolent <a href="">AffanEkaP</a></footer>
     <script>
-        const API_URL = 'https://deploy-npm.vercel.app/'; 
+        const API_URL = 'https://kdgjpvebpgxbtdxdsaff.supabase.co/functions/v1/accounts-api';  // URL Supabase
+        const SUPABASE_ANON_KEY = 'sb_publishable_Hn-ADpLFOMImD47sSB_8wQ_OG8vuMa1';  // Anon key dari command curl Anda
 
-        const user = JSON.parse(sessionStorage.getItem('loggedInUser'));
-        if (!user) {
-            window.location.href = "login.html";
-        }
-        document.querySelector('.nav-text').innerText = user.role === "admin" ? "Admin - Kelas 8 Benevolent" : "Moderator - Kelas 8 Benevolent";
-        document.getElementById('userName').innerText = user.username;
-        if (user.role === "admin") {
-            document.getElementById('moderatorTab').style.display = 'inline-block';
+        // Helper fetch dengan header Supabase
+        async function apiFetch(endpoint, options = {}) {
+            const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` };
+            return fetch(`${API_URL}${endpoint}`, { headers, ...options });
         }
 
-        let editingPrestasiId = null;
-        let editingKaryaId = null;
-        let editingModUsername = null;
+        // Cek user dari localStorage
+        const userRole = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName') || 'User';
+        if (!userRole) window.location.href = 'login.html';
+        document.getElementById('userName').textContent = userName;
+        if (userRole === 'admin') document.getElementById('moderatorTab').style.display = 'inline-block';
+
+        let editingId = null;
+        let editingType = null;
 
         function logout() {
-            sessionStorage.removeItem('loggedInUser');
-            window.location.href = "login.html";
+            localStorage.clear();
+            window.location.href = 'login.html';
         }
 
-        function showTab(tabName) {
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName + '-section').classList.add('active');
+        function showTab(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tab + '-section').classList.add('active');
             event.target.classList.add('active');
-            const titles = { prestasi: 'Kelola Prestasi', karya: 'Kelola Karya Siswa', moderator: 'Kelola Moderator' };
-            document.getElementById('pageTitle').innerText = titles[tabName];
-            if (tabName === 'prestasi') loadPrestasi();
-            else if (tabName === 'karya') loadKarya();
-            else if (tabName === 'moderator' && user.role === "admin") {
-                loadModerators();
-                loadAdmins();
-            }
+            document.getElementById('pageTitle').textContent = `Kelola ${tab.charAt(0).toUpperCase() + tab.slice(1)}`;
+            loadData(tab);
         }
 
-        async function loadPrestasi() {
+        async function loadData(type) {
             try {
-                console.log('Loading prestasi...');
-                const response = await fetch(`${API_URL}/prestasi`);
-                const prestasi = await response.json();
-                console.log('Prestasi data:', prestasi);
-                const list = document.getElementById('prestasiList');
-                const noPrestasi = document.getElementById('noPrestasi');
-                list.innerHTML = '';
-                if (prestasi.length === 0) {
-                    noPrestasi.style.display = 'block';
-                } else {
-                    noPrestasi.style.display = 'none';
-                    prestasi.forEach((item) => {
-                        const li = document.createElement('li');
-                        li.className = 'prestasi-item';
-                        li.innerHTML = `
-                            <div>
-                                <h3>${item.title}</h3>
-                                <p>${item.description}</p>
-                            </div>
-                            <div>
-                                <button class="edit-btn" onclick="editPrestasi(${item.id})">Edit</button>
-                                <button class="delete-btn" onclick="deletePrestasi(${item.id})">Hapus</button>
-                            </div>
-                        `;
-                        list.appendChild(li);
-                    });
+                let response, data, listId, noId, itemClass;
+                if (type === 'prestasi') {
+                    response = await apiFetch('/prestasi');
+                    data = await response.json();
+                    listId = 'prestasiList'; noId = 'noPrestasi'; itemClass = 'prestasi-item';
+                } else if (type === 'karya') {
+                    response = await apiFetch('/karya');
+                    data = await response.json();
+                    listId = 'karyaList'; noId = 'noKarya'; itemClass = 'karya-item';
+                } else if (type === 'moderator' && userRole === 'admin') {
+                    response = await apiFetch('/accounts');
+                    const accounts = await response.json();
+                    loadAccounts(accounts);
+                    return;
                 }
-            } catch (error) {
-                console.error('Error loading prestasi:', error);
+                renderList(listId, noId, data, itemClass, type);
+            } catch (err) {
+                console.error('Error loading:', err);
             }
         }
 
-        async function loadKarya() {
-            try {
-                console.log('Loading karya...');
-                const response = await fetch(`${API_URL}/karya`);
-                const karya = await response.json();
-                console.log('Karya data:', karya);
-                const list = document.getElementById('karyaList');
-                const noKarya = document.getElementById('noKarya');
-                list.innerHTML = '';
-                if (karya.length === 0) {
-                    noKarya.style.display = 'block';
-                } else {
-                    noKarya.style.display = 'none';
-                    karya.forEach((item) => {
-                        const li = document.createElement('li');
-                        li.className = 'karya-item';
-                        li.innerHTML = `
-                            <div>
-                                <h3>${item.title}</h3>
-                                <p>${item.description}</p>
-                            </div>
-                            <div>
-                                <button class="edit-btn" onclick="editKarya(${item.id})">Edit</button>
-                                <button class="delete-btn" onclick="deleteKarya(${item.id})">Hapus</button>
-                            </div>
-                        `;
-                        list.appendChild(li);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading karya:', error);
-            }
-        }
-
-        async function loadModerators() {
-            if (user.role !== "admin") return;
-            try {
-                console.log('Loading moderators...');
-                const response = await fetch(`${API_URL}/accounts`);
-                const accounts = await response.json();
-                console.log('Accounts data:', accounts);
-                const mods = accounts.filter(acc => acc.role === "moderator");
-                const list = document.getElementById('moderatorList');
-                list.innerHTML = '';
-                mods.forEach((mod) => {
+        function renderList(listId, noId, data, itemClass, type) {
+            const list = document.getElementById(listId);
+            const noMsg = document.getElementById(noId);
+            list.innerHTML = '';
+            if (data.length === 0) {
+                noMsg.style.display = 'block';
+            } else {
+                noMsg.style.display = 'none';
+                data.forEach(item => {
                     const li = document.createElement('li');
-                    li.className = 'moderator-item';
+                    li.className = itemClass;
                     li.innerHTML = `
+                        <div><h3>${item.title || item.username}</h3><p>${item.description || `Role: ${item.role} | Status: ${item.active ? 'Aktif' : 'Nonaktif'}`}</p></div>
                         <div>
-                            <h3>${mod.username}</h3>
-                            <p>Role: Moderator | Status: ${mod.active ? 'Aktif' : 'Nonaktif'}</p>
-                        </div>
-                        <div>
-                            <button class="toggle-btn ${mod.active ? '' : 'inactive'}" onclick="toggleActive('${mod.username}')">${mod.active ? 'Nonaktifkan' : 'Aktifkan'}</button>
-                            <button class="edit-btn" onclick="editModerator('${mod.username}')">Edit</button>
-                            <button class="delete-btn" onclick="deleteModerator('${mod.username}')">Hapus</button>
+                            ${type === 'moderator' ? `<button class="toggle-btn ${item.active ? '' : 'inactive'}" onclick="toggleActive('${item.username}')">${item.active ? 'Nonaktifkan' : 'Aktifkan'}</button>` : ''}
+                            <button class="edit-btn" onclick="editItem(${item.id || `'${item.username}'`}, '${type}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteItem(${item.id || `'${item.username}'`}, '${type}')">Hapus</button>
                         </div>
                     `;
                     list.appendChild(li);
                 });
-            } catch (error) {
-                console.error('Error loading moderators:', error);
             }
         }
 
-        async function loadAdmins() {
-            if (user.role !== "admin") return;
-            try {
-                console.log('Loading admins...');
-                const response = await fetch(`${API_URL}/accounts`);
-                const accounts = await response.json();
-                console.log('Accounts data:', accounts);
-                const admins = accounts.filter(acc => acc.role === "admin");
-                const list = document.getElementById('adminList');
-                list.innerHTML = '';
-                admins.forEach((adm) => {
-                    const li = document.createElement('li');
-                    li.className = 'admin-item';
-                    li.innerHTML = `
-                        <div>
-                            <h3>${adm.username}</h3>
-                            <p>Role: Admin | Status: ${adm.active ? 'Aktif' : 'Nonaktif'}</p>
-                        </div>
-                        <div>
-                            ${adm.username !== user.username ? `<button class="toggle-btn ${adm.active ? '' : 'inactive'}" onclick="toggleActive('${adm.username}')">${adm.active ? 'Nonaktifkan' : 'Aktifkan'}</button>` : ''}
-                            ${adm.username !== user.username ? `<button class="edit-btn" onclick="editAdmin('${adm.username}')">Edit</button>` : ''}
-                            ${adm.username !== user.username ? `<button class="delete-btn" onclick="deleteAdmin('${adm.username}')">Hapus</button>` : '<span>(Kamu)</span>'}
-                        </div>
-                    `;
-                    list.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Error loading admins:', error);
-            }
+        async function loadAccounts(accounts) {
+            const mods = accounts.filter(a => a.role === 'moderator');
+            const admins = accounts.filter(a => a.role === 'admin');
+            renderList('moderatorList', null, mods, 'moderator-item', 'moderator');
+            renderList('adminList', null, admins, 'admin-item', 'admin');
         }
 
-        function editPrestasi(id) {
-            fetch(`${API_URL}/prestasi/${id}`)
-                .then(response => response.json())
-                .then(item => {
+        function editItem(id, type) {
+            if (type === 'prestasi') {
+                apiFetch(`/prestasi/${id}`).then(r => r.json()).then(item => {
                     document.getElementById('title').value = item.title;
                     document.getElementById('description').value = item.description;
-                    document.getElementById('prestasiSubmitBtn').textContent = 'Update Prestasi';
-                    document.getElementById('prestasiFormTitle').textContent = 'Edit Prestasi';
-                    document.getElementById('cancelPrestasiBtn').style.display = 'inline-block';
-                    editingPrestasiId = id;
-                })
-                .catch(error => console.error('Error fetching prestasi:', error));
-        }
-
-        function editKarya(id) {
-            fetch(`${API_URL}/karya/${id}`)
-                .then(response => response.json())
-                .then(item => {
+                    setEditMode('prestasi', id);
+                });
+            } else if (type === 'karya') {
+                apiFetch(`/karya/${id}`).then(r => r.json()).then(item => {
                     document.getElementById('karyaTitle').value = item.title;
                     document.getElementById('karyaDescription').value = item.description;
-                    document.getElementById('karyaSubmitBtn').textContent = 'Update Karya';
-                    document.getElementById('karyaFormTitle').textContent = 'Edit Karya Siswa';
-                    document.getElementById('cancelKaryaBtn').style.display = 'inline-block';
-                    editingKaryaId = id;
-                })
-                .catch(error => console.error('Error fetching karya:', error));
+                    setEditMode('karya', id);
+                });
+            } else if (type === 'moderator') {
+                apiFetch(`/accounts/${id}`).then(r => r.json()).then(item => {
+                    document.getElementById('modUsername').value = item.username;
+                    document.getElementById('modActive').checked = item.active;
+                    setEditMode('moderator', id);
+                });
+            }
         }
 
-        function editModerator(username) {
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            fetch(`${API_URL}/accounts/${username}`)
-                .then(response => response.json())
-                .then(account => {
-                    document.getElementById('modUsername').value = account.username;
-                    document.getElementById('modActive').checked = account.active;
-                    document.getElementById('modSubmitBtn').textContent = 'Update Moderator';
-                    document.getElementById('modFormTitle').textContent = 'Edit Moderator';
-                    document.getElementById('cancelModBtn').style.display = 'inline-block';
-                    editingModUsername = username;
-                })
-                .catch(error => console.error('Error fetching moderator:', error));
-        }
-
-        function editAdmin(username) {
-            if (user.role !== "admin" || username === user.username) {
-                alert("Akses ditolak!");
-                return;
-            }
-            fetch(`${API_URL}/accounts/${username}`)
-                .then(response => response.json())
-                .then(account => {
-                    document.getElementById('modUsername').value = account.username;
-                    document.getElementById('modActive').checked = account.active;
-                    document.getElementById('modSubmitBtn').textContent = 'Update Admin';
-                    document.getElementById('modFormTitle').textContent = 'Edit Admin';
-                    document.getElementById('cancelModBtn').style.display = 'inline-block';
-                    editingModUsername = username;
-                })
-                .catch(error => console.error('Error fetching admin:', error));
+        function setEditMode(type, id) {
+            editingId = id;
+            editingType = type;
+            const btn = document.getElementById(type === 'prestasi' ? 'prestasiSubmitBtn' : type === 'karya' ? 'karyaSubmitBtn' : 'modSubmitBtn');
+            const title = document.getElementById(type === 'prestasi' ? 'prestasiFormTitle' : type === 'karya' ? 'karyaFormTitle' : 'modFormTitle');
+            const cancel = document.getElementById(type === 'prestasi' ? 'cancelPrestasiBtn' : type === 'karya' ? 'cancelKaryaBtn' : 'cancelModBtn');
+            btn.textContent = `Update ${type}`;
+            title.textContent = `Edit ${type}`;
+            cancel.style.display = 'inline-block';
         }
 
         function cancelEdit(type) {
-            if (type === 'prestasi') {
-                document.getElementById('title').value = '';
-                document.getElementById('description').value = '';
-                document.getElementById('prestasiSubmitBtn').textContent = 'Tambah Prestasi';
-                document.getElementById('prestasiFormTitle').textContent = 'Tambah Prestasi Baru';
-                document.getElementById('cancelPrestasiBtn').style.display = 'none';
-                editingPrestasiId = null;
-            } else if (type === 'karya') {
-                document.getElementById('karyaTitle').value = '';
-                document.getElementById('karyaDescription').value = '';
-                document.getElementById('karyaSubmitBtn').textContent = 'Tambah Karya';
-                document.getElementById('karyaFormTitle').textContent = 'Tambah Karya Siswa Baru';
-                document.getElementById('cancelKaryaBtn').style.display = 'none';
-                editingKaryaId = null;
-            } else if (type === 'moderator') {
-                document.getElementById('modUsername').value = '';
-                document.getElementById('modPassword').value = '';
-                document.getElementById('modActive').checked = true;
-                document.getElementById('modSubmitBtn').textContent = 'Tambahkan sebagai Moderator';
-                document.getElementById('modFormTitle').textContent = 'Kelola Moderator';
-                document.getElementById('cancelModBtn').style.display = 'none';
-                editingModUsername = null;
-            }
+            editingId = null;
+            editingType = null;
+            const form = type === 'prestasi' ? 'addForm' : type === 'karya' ? 'addKaryaForm' : 'addModForm';
+            document.getElementById(form).reset();
+            const btn = document.getElementById(type === 'prestasi' ? 'prestasiSubmitBtn' : type === 'karya' ? 'karyaSubmitBtn' : 'modSubmitBtn');
+            const title = document.getElementById(type === 'prestasi' ? 'prestasiFormTitle' : type === 'karya' ? 'karyaFormTitle' : 'modFormTitle');
+            const cancel = document.getElementById(type === 'prestasi' ? 'cancelPrestasiBtn' : type === 'karya' ? 'cancelKaryaBtn' : 'cancelModBtn');
+            btn.textContent = `Tambah ${type}`;
+            title.textContent = `Tambah ${type} Baru`;
+            cancel.style.display = 'none';
         }
 
-        document.getElementById('addForm').addEventListener('submit', async function(e) {
+        document.getElementById('addForm').addEventListener('submit', async e => {
             e.preventDefault();
-            const title = document.getElementById('title').value;
-            const description = document.getElementById('description').value;
-            try {
-                if (editingPrestasiId) {
-                    await fetch(`${API_URL}/prestasi/${editingPrestasiId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, description })
-                    });
-                } else {
-                    await fetch(`${API_URL}/prestasi`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, description })
-                    });
-                }
-                cancelEdit('prestasi');
-                loadPrestasi();
-            } catch (error) {
-                console.error('Error saving prestasi:', error);
-            }
+            const data = { title: document.getElementById('title').value, description: document.getElementById('description').value };
+            const method = editingId ? 'PUT' : 'POST';
+            const url = editingId ? `/prestasi/${editingId}` : '/prestasi';
+            await apiFetch(url, { method, body: JSON.stringify(data) });
+            cancelEdit('prestasi');
+            loadData('prestasi');
         });
 
-        document.getElementById('addKaryaForm').addEventListener('submit', async function(e) {
+        document.getElementById('addKaryaForm').addEventListener('submit', async e => {
             e.preventDefault();
-            const title = document.getElementById('karyaTitle').value;
-            const description = document.getElementById('karyaDescription').value;
-            try {
-                if (editingKaryaId) {
-                    await fetch(`${API_URL}/karya/${editingKaryaId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, description })
-                    });
-                } else {
-                    await fetch(`${API_URL}/karya`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, description })
-                    });
-                }
-                cancelEdit('karya');
-                loadKarya();
-            } catch (error) {
-                console.error('Error saving karya:', error);
-            }
+            const data = { title: document.getElementById('karyaTitle').value, description: document.getElementById('karyaDescription').value };
+            const method = editingId ? 'PUT' : 'POST';
+            const url = editingId ? `/karya/${editingId}` : '/karya';
+            await apiFetch(url, { method, body: JSON.stringify(data) });
+            cancelEdit('karya');
+            loadData('karya');
         });
 
-        document.getElementById('addModForm').addEventListener('submit', async function(e) {
+        document.getElementById('addModForm').addEventListener('submit', async e => {
             e.preventDefault();
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            const username = document.getElementById('modUsername').value;
-            const password = document.getElementById('modPassword').value;
-            const active = document.getElementById('modActive').checked;
-            try {
-                if (editingModUsername) {
-                    await fetch(`${API_URL}/accounts/${editingModUsername}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password, role: 'moderator', active })
-                    });
-                } else {
-                    await fetch(`${API_URL}/register`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username, password, role: 'moderator' })
-                    });
-                }
-                cancelEdit('moderator');
-                loadModerators();
-                loadAdmins();
-            } catch (error) {
-                console.error('Error saving moderator:', error);
-            }
+            if (userRole !== 'admin') return alert('Akses ditolak!');
+            const data = { username: document.getElementById('modUsername').value, password: document.getElementById('modPassword').value, role: 'moderator', active: document.getElementById('modActive').checked };
+            const method = editingId ? 'PUT' : 'POST';
+            const url = editingId ? `/accounts/${editingId}` : '/register';
+            await apiFetch(url, { method, body: JSON.stringify(data) });
+            cancelEdit('moderator');
+            loadData('moderator');
         });
 
-        document.getElementById('addAdminBtn').addEventListener('click', async function(e) {
-            e.preventDefault();
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            const username = document.getElementById('modUsername').value;
-            const password = document.getElementById('modPassword').value;
-            try {
-                await fetch(`${API_URL}/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, role: 'admin' })
-                });
-                document.getElementById('modUsername').value = '';
-                document.getElementById('modPassword').value = '';
-                document.getElementById('modActive').checked = true;
-                loadAdmins();
-            } catch (error) {
-                console.error('Error adding admin:', error);
-            }
+        document.getElementById('addAdminBtn').addEventListener('click', async () => {
+            if (userRole !== 'admin') return document.getElementById('addAdminBtn').addEventListener('click', async () => {
+            if (userRole !== 'admin') return alert('Akses ditolak!');
+            const data = { username: document.getElementById('modUsername').value, password: document.getElementById('modPassword').value, role: 'admin' };
+            await apiFetch('/register', { method: 'POST', body: JSON.stringify(data) });
+            document.getElementById('addModForm').reset();
+            loadData('moderator');
         });
 
-        async function deletePrestasi(id) {
-            if (!confirm("Apakah Anda yakin ingin menghapus prestasi ini?")) return;
-            try {
-                await fetch(`${API_URL}/prestasi/${id}`, { method: 'DELETE' });
-                loadPrestasi();
-            } catch (error) {
-                console.error('Error deleting prestasi:', error);
-            }
-        }
-
-        async function deleteKarya(id) {
-            if (!confirm("Apakah Anda yakin ingin menghapus karya siswa ini?")) return;
-            try {
-                await fetch(`${API_URL}/karya/${id}`, { method: 'DELETE' });
-                loadKarya();
-            } catch (error) {
-                console.error('Error deleting karya:', error);
-            }
-        }
-
-        async function deleteModerator(username) {
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            if (!confirm("Apakah Anda yakin ingin menghapus moderator ini?")) return;
-            try {
-                await fetch(`${API_URL}/accounts/${username}`, { method: 'DELETE' });
-                loadModerators();
-            } catch (error) {
-                console.error('Error deleting moderator:', error);
-            }
-        }
-
-        async function deleteAdmin(username) {
-            if (user.role !== "admin" || username === user.username) {
-                alert("Akses ditolak!");
-                return;
-            }
-            if (!confirm("Apakah Anda yakin ingin menghapus admin ini?")) return;
-            try {
-                await fetch(`${API_URL}/accounts/${username}`, { method: 'DELETE' });
-                loadAdmins();
-            } catch (error) {
-                console.error('Error deleting admin:', error);
-            }
+        async function deleteItem(id, type) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus ${type} ini?`)) return;
+            let url;
+            if (type === 'prestasi') url = `/prestasi/${id}`;
+            else if (type === 'karya') url = `/karya/${id}`;
+            else if (type === 'moderator' || type === 'admin') url = `/accounts/${id}`;
+            await apiFetch(url, { method: 'DELETE' });
+            loadData(type);
         }
 
         async function toggleActive(username) {
-            if (user.role !== "admin") {
-                alert("Akses ditolak!");
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/accounts`);
-                const accounts = await response.json();
-                const account = accounts.find(acc => acc.username === username);
-                if (account) {
-                    await fetch(`${API_URL}/accounts/${username}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ role: account.role, active: !account.active })
-                    });
-                    loadModerators();
-                    loadAdmins();
-                }
-            } catch (error) {
-                console.error('Error toggling active:', error);
+            if (userRole !== 'admin') return alert('Akses ditolak!');
+            const response = await apiFetch('/accounts');
+            const accounts = await response.json();
+            const account = accounts.find(acc => acc.username === username);
+            if (account) {
+                await apiFetch(`/accounts/${username}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ role: account.role, active: !account.active })
+                });
+                loadData('moderator');
             }
         }
 
         window.onload = function() {
-            loadPrestasi();
-            loadKarya();
-            if (user.role === "admin") {
-                loadModerators();
-                loadAdmins();
-            }
+            loadData('prestasi');
+            loadData('karya');
+            if (userRole === 'admin') loadData('moderator');
         };
     </script>
 </body>
