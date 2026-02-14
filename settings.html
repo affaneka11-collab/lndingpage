@@ -1,10 +1,21 @@
+<!-- settings.html -->
 <!DOCTYPE html>
-<html lang="id">    
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website - BenevolentClass</title>
-    <link rel="stylesheet" href="styles/first.css">
+    <title>Settings - BenevolentClass</title>
+    <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="styleutama.css"> <!-- File CSS utama -->
+    <script src="theme.js"></script>
+    <style>
+        main {
+            opacity: 1;
+            margin-top: 80px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,25 +29,96 @@
                 <a href="prestasi.html">🏆 Prestasi</a>
                 <a href="karya-siswa.html">🎨 Karya Siswa</a>
                 <a href="tentang-sekolah.html">🏫 Tentang Sekolah</a>
-                <a id="setting" href="settings.html" class="active">⚙️   Settings</a>
+                <a id="setting" href="settings.html" class="active">⚙️ Settings</a>
             </div>
         </nav>
     </header>
-    <main>  
-        <h2>Settings</h2>
-        <h1 style="border-bottom: blue 2px solid;">halaman pengaturan  interface user!</h1>
-        <div class="tombol-admin">
-            <button class="tombol-admin" onclick="loginAdmin()">Login Admin</button>
+    <main>
+        <div class="settings-container">
+            <h2>Settings</h2>
+            <h3>Pilih Tema</h3>
+            <div class="theme-options">
+                <div class="theme-option" data-theme="light">
+                    <h3>Tema Terang</h3>
+                    <p>Background putih, teks gelap, cocok untuk siang hari.</p>
+                </div>
+                <div class="theme-option" data-theme="dark">
+                    <h3>Tema Gelap</h3>
+                    <p>Background gelap, teks terang, mudah di mata.</p>
+                </div>
+                <div class="theme-option" data-theme="blue">
+                    <h3>Tema Biru</h3>
+                    <p>Background biru, teks putih, tema klasik.</p>
+                </div>
+            </div>
+            <button onclick="applyTheme()">Terapkan Tema</button>
+            <div class="tombol-admin">
+                <button onclick="loginAdmin()">Login Admin</button>
+            </div>
         </div>
-        <script>
-            function loginAdmin() {
-                window.location.href='https://admin.benevolentclass.my.id/';
-            }
-        </script>
     </main>
     <footer>
         © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
     </footer>
 
-</html>
+    <script>
+        // Fungsi untuk menerapkan tema
+        function applyTheme() {
+            const selected = document.querySelector('.theme-option.selected');
+            if (!selected) {
+                alert('Pilih tema terlebih dahulu!');
+                return;
+            }
+            const theme = selected.getAttribute('data-theme');
+            setTheme(theme);
+            localStorage.setItem('selectedTheme', theme);
+            alert('Tema diterapkan!');
+        }
 
+        // Fungsi untuk mengatur tema
+        function setTheme(theme) {
+            const root = document.documentElement;
+            if (theme === 'light') {
+                root.style.setProperty('--bg-color', '#ffffff');
+                root.style.setProperty('--text-color', '#333');
+                root.style.setProperty('--nav-bg', 'rgba(255, 255, 255, 0.9)');
+                root.style.setProperty('--card-bg', '#fff');
+                root.style.setProperty('--accent-color', '#007bff');
+            } else if (theme === 'dark') {
+                root.style.setProperty('--bg-color', '#333');
+                root.style.setProperty('--text-color', '#fff');
+                root.style.setProperty('--nav-bg', 'rgba(51, 51, 51, 0.9)');
+                root.style.setProperty('--card-bg', '#444');
+                root.style.setProperty('--accent-color', '#ffa500');
+            } else if (theme === 'blue') {
+                root.style.setProperty('--bg-color', '#e3f2fd');
+                root.style.setProperty('--text-color', '#0d47a1');
+                root.style.setProperty('--nav-bg', 'rgba(227, 242, 253, 0.9)');
+                root.style.setProperty('--card-bg', '#bbdefb');
+                root.style.setProperty('--accent-color', '#1976d2');
+            }
+        }
+
+        // Fungsi untuk memilih tema
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Load tema yang disimpan
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('selectedTheme') || 'light';
+            setTheme(savedTheme);
+            const option = document.querySelector(`.theme-option[data-theme="${savedTheme}"]`);
+            if (option) option.classList.add('selected');
+        };
+
+        // Fungsi login admin
+        function loginAdmin() {
+            window.location.href = 'https://admin.benevolentclass.my.id/';
+        }
+    </script>
+</body>
+</html>
