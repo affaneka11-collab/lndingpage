@@ -26,16 +26,9 @@ function setTheme(theme) {
         root.style.setProperty('--container-bg', 'rgba(187, 222, 251, 0.9)');
         root.style.setProperty('--accent-color', '#1976d2');
     }
-    // Simpan tema ke localStorage
-    localStorage.setItem('selectedTheme', theme);
-}
-
-// Fungsi untuk mengubah tema (dipanggil dari UI)
-function changeTheme(theme) {
-    setTheme(theme);
-}
 
 window.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('selectedTheme') || 'light';
     setTheme(savedTheme);
 });
+
