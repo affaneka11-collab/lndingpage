@@ -6,6 +6,7 @@ function setTheme(theme) {
         root.style.setProperty('--text-color', '#333');
         root.style.setProperty('--nav-bg', 'rgba(255, 255, 255, 0.9)');
         root.style.setProperty('--card-bg', '#fff');
+        root.style.setProperty('--modal-bg', 'rgba(255, 255, 255, 0.9)');
         root.style.setProperty('--container-bg', 'rgba(255, 255, 255, 0.9)');
         root.style.setProperty('--accent-color', '#007bff');
     } else if (theme === 'dark') {
@@ -13,6 +14,7 @@ function setTheme(theme) {
         root.style.setProperty('--text-color', '#fff');
         root.style.setProperty('--nav-bg', 'rgba(51, 51, 51, 0.9)');
         root.style.setProperty('--card-bg', '#444');
+        root.style.setProperty('--modal-bg', '#444');
         root.style.setProperty('--container-bg', 'rgba(68, 68, 68, 0.9)');
         root.style.setProperty('--accent-color', '#ffa500');
     } else if (theme === 'blue') {
@@ -20,9 +22,17 @@ function setTheme(theme) {
         root.style.setProperty('--text-color', '#0d47a1');
         root.style.setProperty('--nav-bg', 'rgba(227, 242, 253, 0.9)');
         root.style.setProperty('--card-bg', '#bbdefb');
+        root.style.setProperty('--modal-bg', '#bbdefb');
         root.style.setProperty('--container-bg', 'rgba(187, 222, 251, 0.9)');
         root.style.setProperty('--accent-color', '#1976d2');
     }
+    // Simpan tema ke localStorage
+    localStorage.setItem('selectedTheme', theme);
+}
+
+// Fungsi untuk mengubah tema (dipanggil dari UI)
+function changeTheme(theme) {
+    setTheme(theme);
 }
 
 window.addEventListener('DOMContentLoaded', function() {
