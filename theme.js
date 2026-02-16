@@ -31,4 +31,3 @@ window.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('selectedTheme') || 'light';
     setTheme(savedTheme);
 });
-
