@@ -128,6 +128,14 @@
             }
         });
 
+        // Tambahkan event listener untuk memilih tema
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
         function applyTheme() {
             const selectedTheme = document.querySelector('.theme-option.selected')?.getAttribute('data-theme');
             if (selectedTheme) {
@@ -139,20 +147,12 @@
         }
 
         function loginAdmin() {
-            window.location.href = "login.html?role=admin";
+            window.location.href = "admin.benevolentclass.my.id";
         }
 
         function loginSiswa() {
-            window.location.href = "login.html?role=siswa";
+            window.location.href = "siswa.benevolentclass.my.id";
         }
-
-        // Tambahkan event listener untuk memilih tema
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
         </script>
 </body>
 </html>
