@@ -26,6 +26,12 @@ function setTheme(theme) {
         root.style.setProperty('--container-bg', 'rgba(187, 222, 251, 0.9)');
         root.style.setProperty('--accent-color', '#1976d2');
     }
+    localStorage.setItem('selectedTheme', theme);
+}
+
+function changeTheme(theme) {
+    setTheme(theme);
+}
 
 window.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('selectedTheme') || 'light';
