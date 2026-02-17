@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         siswaData = (siswa || []).map(item => ({
             nama: item.nama_siswa,
             no_urut: item.id, // Gunakan id sebagai no_urut
+            pesan: item.pesan || 'Tidak ada pesan',
             tanggal_lahir: item["tanggal lahir"] || 'Tidak ada',
             instagram: item["akun IG"] || '#',
             tiktok: item["akun Tiktok"] || '#',
