@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     try {
         const { data: siswa, error } = await supabaselokal
             .from('siswa')
-            .select('id, nama_siswa, "akun IG", "akun Tiktok", "tanggal lahir"')
+            .select('id, nama_siswa, "akun IG", "akun Tiktok", "tanggal lahir", pesan')
             .order('id', { ascending: true });
         
         if (error) throw error;
@@ -127,6 +127,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         const modalDob = document.getElementById('modalDob');
         const modalIg = document.getElementById('modalIg');
         const modalTiktok = document.getElementById('modalTiktok');
+        const modalPesan = document.getElementById('modalPesan');
+
         
         modalImg.src = siswa.foto;
         modalName.textContent = siswa.nama;
@@ -136,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         modalIg.textContent = siswa.instagram !== '#' ? '@' + siswa.instagram.split('/').pop() : 'Tidak ada';
         modalTiktok.href = siswa.tiktok.startsWith('http') ? siswa.tiktok : '#';
         modalTiktok.textContent = siswa.tiktok !== '#' ? '@' + siswa.tiktok.split('/').pop() : 'Tidak ada';
+        modalPesan.textContent = siswa.pesan || 'Tidak ada pesan';
         
         modal.showModal();
     }
