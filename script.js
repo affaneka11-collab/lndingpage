@@ -135,11 +135,15 @@ document.addEventListener("DOMContentLoaded", async function() {
         modalName.textContent = siswa.nama;
         modalNo.textContent = siswa.no_urut;
         modalDob.textContent = siswa.tanggal_lahir;
-        modalIg.href = siswa.instagram.startsWith('http') ? siswa.instagram : '#';
-        modalIg.textContent = siswa.instagram !== '#' ? '@' + siswa.instagram.split('/').pop() : 'Tidak ada';
-        modalTiktok.href = siswa.tiktok.startsWith('http') ? siswa.tiktok : '#';
-        modalTiktok.textContent = siswa.tiktok !== '#' ? '@' + siswa.tiktok.split('/').pop() : 'Tidak ada';
         modalPesan.textContent = siswa.pesan || 'Tidak ada pesan';
+
+        const igUsername = siswa.instagram ? siswa.instagram.replace('@', '') : '';
+        modalIg.href = igUsername ? `https://www.instagram.com/${igUsername}` : '#';
+        modalIg.textContent = igUsername ? `@${igUsername}` : 'Tidak ada';
+        
+        const tiktokUsername = siswa.tiktok ? siswa.tiktok.replace('@', '') : '';
+        modalTiktok.href = tiktokUsername ? `https://www.tiktok.com/@${tiktokUsername}` : '#';
+        modalTiktok.textContent = tiktokUsername ? `@${tiktokUsername}` : 'Tidak ada';
         
         modal.showModal();
     }
