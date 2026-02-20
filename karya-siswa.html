@@ -3,62 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karya Siswa - BenevolentClass</title>
+    <title>404 – Halaman Tidak Ditemukan</title>
     <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
     <script src="theme.js"></script>
     <link rel="stylesheet" href="styleutama.css">
     <style>
         main {
-            opacity: 1;
             margin-top: 80px;
             padding: 20px;
             min-height: 100vh;
         }
-        /* Tambahan CSS untuk hamburger menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            padding: 5px;
+
+        .container-404 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            position: relative;
+            text-align: center;
         }
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-color);
-            margin: 3px 0;
-            transition: 0.3s;
+
+        .bg-404 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12rem;
+            font-weight: 900;
+            color: rgba(0,0,0,0.05);
+            z-index: -1;
+            user-select: none;
         }
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
+
+        .content-404 {
+            max-width: 600px;
+            width: 100%;
+            z-index: 1;
         }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
+
+        .illustration {
+            width: 280px;
+            max-width: 80%;
+            margin-bottom: 1.5rem;
+            animation: float 4s ease-in-out infinite;
         }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
+
+        .title-404 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .desc-404 {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background-color: #4299e1;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background-color: #3182ce;
+        }
+
+        /* Responsive 404 */
+        @media (max-width: 640px) {
+            .bg-404 {
+                font-size: 7rem;
             }
-            .nav-right {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--nav-bg);
-                padding: 10px 0;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            }
-            .nav-right.show {
-                display: flex;
-            }
         }
+
     </style>
 </head>
 <body>
+    <!-- Header dengan Hamburger Menu -->
     <header>
         <nav id="main-nav">
             <div class="nav-left">
@@ -73,39 +106,48 @@
             <div class="nav-right" id="navRight">
                 <a href="index.html">🏠 Main Menu</a>
                 <a href="prestasi.html">🏆 Prestasi</a>
-                <a href="karya-siswa.html" class="active">🎨 Karya Siswa</a>
+                <a href="karya-siswa.html">🎨 Karya Siswa</a>
                 <a href="index.html#tntngsklh">🏫 Tentang Sekolah</a>
                 <a id="setting" href="settings.html">⚙️ Settings</a>
             </div>
         </nav>
     </header>
+
+    <!-- Konten 404 -->
     <main>
-        <h2>Karya Siswa Kelas 8 Benevolent</h2>
-        <div class="container-warpper">
-            <p>Berikut adalah daftar karya siswa yang telah dibuat oleh kelas 8 Benevolent.</p>
-            <div class="prestasi-grid" id="prestasiGrid">
-                <!-- Karya siswa akan dimuat di sini via JavaScript -->
+        <div class="container-404">
+            <div class="bg-404">404</div>
+            <div class="content-404">
+                <svg class="illustration" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="40" y="40" width="320" height="220" rx="10"
+                          fill="var(--bg-page)" stroke="var(--text-muted)" stroke-width="2"/>
+                    <line x1="80" y1="120" x2="200" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
+                    <line x1="200" y1="120" x2="80" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
+                    <text x="200" y="210" text-anchor="middle" fill="var(--text-muted)"
+                          font-family="sans-serif" font-size="20" font-weight="bold">PAGE NOT FOUND</text>
+                </svg>
+
+                <h1 class="title-404">Ups, halaman tidak ditemukan</h1>
+                <p class="desc-404">Sepertinya tautan yang kamu buka salah atau sudah dihapus.<br>Coba kembali ke halaman utama ya!</p>
+
+                <a href="index.html" class="btn-home">Kembali ke Halaman Utama</a>
             </div>
-            <p id="noPrestasi" class="no-prestasi" style="display: none;">Belum ada karya siswa yang ditambahkan.</p>
         </div>
     </main>
-    <footer>
-        © 2025 ICT 8 Benevolent <a href="">AffanEkaP</a>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="karyasis.js"></script>
     <script>
+        // Hamburger Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
-        const hamburger = document.getElementById('hamburger');
-        const navRight = document.getElementById('navRight');
-        if (hamburger && navRight) {
-            hamburger.addEventListener('click', function() {
-                hamburger.classList.toggle('active');
-                navRight.classList.toggle('show');
-            });
-        }
-    });
+            const hamburger = document.getElementById('hamburger');
+            const navRight = document.getElementById('navRight');
+            
+            if (hamburger && navRight) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navRight.classList.toggle('show');
+                });
+            }
+        });
     </script>
 </body>
 </html>
