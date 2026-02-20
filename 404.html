@@ -5,29 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 – Halaman Tidak Ditemukan</title>
 
-    <!-- Menggunakan stylesheet utama agar tampilan konsisten -->
+    <!-- Favicon & stylesheet utama -->
+    <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="styleutama.css">
 
+    <!-- Skrip tema (toggle hamburger & dark mode) -->
+    <script src="theme.js" defer></script>
+
     <style>
-        /* ---------- Penataan Halaman 404 ---------- */
+        /* ---------- Variabel Warna (Dark‑Mode Otomatis) ---------- */
         :root {
-            --bg-page     : #f7fafc;
-            --text-main   : #2d3748;
-            --text-muted  : #718096;
-            --accent      : #4299e1;
-            --accent-hover: #3182ce;
+            --bg-page      : #f7fafc;
+            --text-main    : #2d3748;
+            --text-muted   : #718096;
+            --accent       : #4299e1;
+            --accent-hover : #3182ce;
+            --header-bg    : #ffffff;
+            --header-text  : #2d3748;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg-page     : #1a202c;
-                --text-main   : #e2e8f0;
-                --text-muted  : #a0aec0;
-                --accent      : #63b3ed;
-                --accent-hover: #4299e1;
+                --bg-page      : #1a202c;
+                --text-main    : #e2e8f0;
+                --text-muted   : #a0aec0;
+                --accent       : #63b3ed;
+                --accent-hover : #4299e1;
+                --header-bg    : #2d3748;
+                --header-text  : #e2e8f0;
             }
         }
 
+        /* ---------- Dasar Halaman ---------- */
         body {
             margin: 0;
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -35,22 +44,108 @@
             background-color: var(--bg-page);
             color: var(--text-main);
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ---------- Header / Navigasi ---------- */
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav#main-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-logo {
+            height: 2.5rem;
+            width: auto;
+        }
+
+        .nav-text {
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: 0.025em;
+        }
+
+        /* Menu kanan (tautan) */
+        .nav-right {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--header-text);
+            transition: color 0.2s;
+        }
+
+        .nav-right a:hover,
+        .nav-right a.active {
+            color: var(--accent);
+        }
+
+        /* Hamburger (mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--header-text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Responsif: tampilkan hamburger pada layar kecil */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-right {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--header-bg);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            .nav-right.show { display: flex; }
+        }
+
+        /* ---------- Konten 404 ---------- */
+        .container-404 {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-
-        /* Layout Responsif */
-        .container {
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
+            padding: 2rem 1rem;
             position: relative;
-            z-index: 1;
         }
 
-        /* 404 Besar di Belakang */
         .bg-404 {
             position: absolute;
             top: 50%;
@@ -58,7 +153,7 @@
             transform: translate(-50%, -50%);
             font-size: 12rem;
             font-weight: 900;
-            color: rgba(0, 0, 0, 0.301);
+            color: rgba(0,0,0,0.05);
             line-height: 1;
             z-index: -1;
             user-select: none;
@@ -68,29 +163,38 @@
             .bg-404 { font-size: 7rem; }
         }
 
-        /* Ilustrasi (SVG) */
+        .content-404 {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            z-index: 1;
+        }
+
         .illustration {
             width: 280px;
             max-width: 80%;
             margin-bottom: 1.5rem;
-            display: inline-block;
+            animation: float 4s ease-in-out infinite;
         }
 
-        /* Teks Utama */
-        .title {
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .title-404 {
             font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--text-main);
         }
 
-        .description {
+        .desc-404 {
             font-size: 1.125rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
 
-        /* Tombol Kembali */
         .btn-home {
             display: inline-block;
             padding: 0.75rem 2rem;
@@ -105,44 +209,63 @@
         .btn-home:hover {
             background-color: var(--accent-hover);
         }
-
-        /* Opsional: animasi halus pada ilustrasi */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .illustration {
-            animation: float 4s ease-in-out infinite;
-        }
     </style>
-
-    <!-- Skrip tema (bila ingin toggle manual) -->
-    <script src="theme.js" defer></script>
 </head>
 <body>
 
-    <!-- 404 Background -->
-    <div class="bg-404">404</div>
+    <!-- ========== Header / Navigasi ========== -->
+    <header>
+        <nav id="main-nav">
+            <div class="nav-left">
+                <img src="img/logo.png" alt="Logo" class="nav-logo">
+                <span class="nav-text">Kelas 8 Benevolent</span>
+            </div>
+            <div class="hamburger" id="hamburger" onclick="toggleNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-right" id="navRight">
+                <a href="index.html">🏠 Main Menu</a>
+                <a href="prestasi.html">🏆 Prestasi</a>
+                <a href="karya-siswa.html">🎨 Karya Siswa</a>
+                <a href="#tntngsklh">🏫 Tentang Sekolah</a>
+                <a id="setting" href="settings.html">⚙️ Settings</a>
+            </div>
+        </nav>
+    </header>
 
-    <div class="container">
-        <!-- Ilustrasi SVG (bisa diganti dengan <img>) -->
-        <svg class="illustration" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-            <!-- Latar Kertas -->
-            <rect x="40" y="40" width="320" height="220" rx="10"
-                  fill="var(--bg-page)" stroke="var(--text-muted)" stroke-width="2"/>
-            <!-- Garis Putus (tanda tidak ada) -->
-            <line x1="80" y1="120" x2="200" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
-            <line x1="200" y1="120" x2="80" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
-            <!-- Teks “Page” di bawah -->
-            <text x="200" y="210" text-anchor="middle" fill="var(--text-muted)"
-                  font-family="sans-serif" font-size="20" font-weight="bold">PAGE NOT FOUND</text>
-        </svg>
+    <!-- ========== Konten 404 ========== -->
+    <div class="container-404">
+        <div class="bg-404">404</div>
 
-        <h1 class="title">Ups, halaman tidak ditemukan</h1>
-        <p class="description">Sepertinya tautan yang kamu buka salah atau sudah dihapus.<br>Coba kembali ke halaman utama ya!</p>
+        <div class="content-404">
+            <!-- Ilustrasi SVG (bisa diganti dengan <img>) -->
+            <svg class="illustration" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Kertas / Dokumen -->
+                <rect x="40" y="40" width="320" height="220" rx="10"
+                      fill="var(--bg-page)" stroke="var(--text-muted)" stroke-width="2"/>
+                <!-- X merah (tanda tidak ada) -->
+                <line x1="80" y1="120" x2="200" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
+                <line x1="200" y1="120" x2="80" y2="240" stroke="#e53e3e" stroke-width="4" stroke-linecap="round"/>
+                <!-- Teks “PAGE NOT FOUND” -->
+                <text x="200" y="210" text-anchor="middle" fill="var(--text-muted)"
+                      font-family="sans-serif" font-size="20" font-weight="bold">PAGE NOT FOUND</text>
+            </svg>
 
-        <a href="index.html" class="btn-home">Kembali ke Halaman Utama</a>
+            <h1 class="title-404">Ups, halaman tidak ditemukan</h1>
+            <p class="desc-404">Sepertinya tautan yang kamu buka salah atau sudah dihapus.<br>Coba kembali ke halaman utama ya!</p>
+
+            <a href="index.html" class="btn-home">Kembali ke Halaman Utama</a>
+        </div>
     </div>
 
+    <!-- Skrip untuk toggel menu mobile (bila belum ada di theme.js) -->
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('navRight');
+            nav.classList.toggle('show');
+        }
+    </script>
 </body>
 </html>
