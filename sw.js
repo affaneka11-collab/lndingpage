@@ -1,5 +1,5 @@
 const CACHE_NAME = 'my-app-v1';
-const REPO_NAME = 'nama-repo'; // Ganti dengan nama repository Anda
+const REPO_NAME = 'lndingpage'; // Ganti dengan nama repository Anda
 
 // Path dasar
 const BASE_PATH = REPO_NAME ? `/${REPO_NAME}` : '';
