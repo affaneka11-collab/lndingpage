@@ -6,12 +6,12 @@ const BASE_PATH = REPO_NAME ? `/${REPO_NAME}` : '';
 
 const urlsToCache = [
     `${BASE_PATH}/`,
-    `${BASE_PATH}/index.html`,
+    `${BASE_PATH}/debug.html`,
     `${BASE_PATH}/offline.html`,
     `${BASE_PATH}/manifest.json`
 ];
 
-const OFFLINE_URL = `${BASE_PATH}/offline.html`;
+const OFFLINE_URL = `/offline.html`;
 
 console.log('SW: Starting...');
 console.log('SW: Base path:', BASE_PATH);
