@@ -3,59 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Offline Page</title>
+    <title>Debug Offline Page</title>
     <link rel="manifest" href="/manifest.json">
-    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
             padding: 20px;
         }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
         .status-box {
-            background: #f0f0f0;
+            background: rgba(255,255,255,0.2);
             padding: 15px;
             margin: 10px 0;
-            border-radius: 5px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
         }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
-        .info { background: #d1ecf1; color: #0c5460; }
+        .status-box h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .success { background: rgba(40, 167, 69, 0.3); border: 1px solid #28a745; }
+        .error { background: rgba(220, 53, 69, 0.3); border: 1px solid #dc3545; }
+        .info { background: rgba(23, 162, 184, 0.3); border: 1px solid #17a2b8; }
+        .warning { background: rgba(255, 193, 7, 0.3); border: 1px solid #ffc107; }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        pre {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <h1>Debug Service Worker</h1>
-    
-    <div class="status-box info">
-        <strong>Network Status:</strong> <span id="network-status">Checking...</span>
+    <div class="container">
+        <h1>🔧 Debug Service Worker</h1>
+        
+        <div class="status-box info">
+            <h3>🌐 Network Status</h3>
+            <p id="network-status">Checking...</p>
+        </div>
+        
+        <div class="status-box info">
+            <h3>📦 Service Worker Support</h3>
+            <p id="sw-support">Checking...</p>
+        </div>
+        
+        <div class="status-box" id="sw-register-status">
+            <h3>📝 Service Worker Registration</h3>
+            <p id="sw-register">Checking...</p>
+        </div>
+        
+        <div class="status-box" id="cache-status">
+            <h3>💾 Cache Storage</h3>
+            <p id="cache-list">Checking...</p>
+            <pre id="cache-details"></pre>
+        </div>
+        
+        <div class="status-box" id="sw-controller-status">
+            <h3>🎮 Service Worker Controller</h3>
+            <p id="sw-controller">Checking...</p>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="checkCache()">🔄 Refresh Cache Info</button>
+            <button onclick="unregisterSW()">❌ Unregister SW & Refresh</button>
+            <button onclick="testOffline()">📡 Test Offline Mode</button>
+        </div>
     </div>
-    
-    <div class="status-box info">
-        <strong>Service Worker Support:</strong> <span id="sw-support">Checking...</span>
-    </div>
-    
-    <div class="status-box" id="sw-register-status">
-        <strong>Service Worker Registration:</strong> <span id="sw-register">Checking...</span>
-    </div>
-    
-    <div class="status-box" id="cache-status">
-        <strong>Cache Status:</strong> <span id="cache-list">Checking...</span>
-    </div>
-    
-    <button onclick="checkCache()" style="padding: 10px 20px; cursor: pointer;">
-        Refresh Cache Info
-    </button>
-    
-    <button onclick="unregisterSW()" style="padding: 10px 20px; cursor: pointer;">
-        Unregister SW & Refresh
-    </button>
     
     <script>
         // 1. Check network status
         function updateNetworkStatus() {
-            document.getElementById('network-status').textContent = 
-                navigator.onLine ? 'Online 🟢' : 'Offline 🔴';
+            const status = navigator.onLine ? 'Online 🟢' : 'Offline 🔴';
+            document.getElementById('network-status').textContent = status;
         }
         window.addEventListener('online', updateNetworkStatus);
         window.addEventListener('offline', updateNetworkStatus);
@@ -63,10 +119,10 @@
         
         // 2. Check SW support
         if ('serviceWorker' in navigator) {
-            document.getElementById('sw-support').textContent = 'Supported ✅';
+            document.getElementById('sw-support').innerHTML = 'Supported ✅';
             document.getElementById('sw-support').parentElement.classList.add('success');
         } else {
-            document.getElementById('sw-support').textContent = 'Not Supported ❌';
+            document.getElementById('sw-support').innerHTML = 'Not Supported ❌';
             document.getElementById('sw-support').parentElement.classList.add('error');
         }
         
@@ -75,18 +131,24 @@
             navigator.serviceWorker.register('/sw.js')
                 .then(registration => {
                     console.log('SW registered:', registration);
-                    document.getElementById('sw-register').textContent = 
-                        `Registered (Scope: ${registration.scope}) ✅`;
+                    document.getElementById('sw-register').innerHTML = 
+                        `Registered ✅<br>Scope: ${registration.scope}<br>Active: ${registration.active ? 'Yes' : 'No'}`;
                     document.getElementById('sw-register-status').classList.add('success');
                     
                     // Check if controlling
                     if (navigator.serviceWorker.controller) {
-                        console.log('SW is controlling the page');
+                        document.getElementById('sw-controller').innerHTML = 
+                            `Controller exists ✅<br>Script: ${navigator.serviceWorker.controller.scriptURL}`;
+                        document.getElementById('sw-controller-status').classList.add('success');
+                    } else {
+                        document.getElementById('sw-controller').innerHTML = 
+                            `No controller yet (refresh to activate)`;
+                        document.getElementById('sw-controller-status').classList.add('warning');
                     }
                 })
                 .catch(error => {
                     console.error('SW registration failed:', error);
-                    document.getElementById('sw-register').textContent = 
+                    document.getElementById('sw-register').innerHTML = 
                         `Failed: ${error.message} ❌`;
                     document.getElementById('sw-register-status').classList.add('error');
                 });
@@ -98,27 +160,32 @@
                 caches.keys().then(cacheNames => {
                     console.log('Cache names:', cacheNames);
                     if (cacheNames.length === 0) {
-                        document.getElementById('cache-list').textContent = 
+                        document.getElementById('cache-list').innerHTML = 
                             'No cache found ❌';
                         document.getElementById('cache-status').classList.add('error');
+                        document.getElementById('cache-details').textContent = '';
                     } else {
-                        const cacheInfo = cacheNames.map(name => {
+                        const cachePromises = cacheNames.map(name => {
                             return caches.open(name).then(cache => {
                                 return cache.keys().then(keys => {
-                                    return `${name}: ${keys.length} files`;
+                                    const files = Array.from(keys).map(k => k.url);
+                                    return `📦 ${name} (${keys.length} files):\n${files.join('\n')}`;
                                 });
                             });
                         });
-                        Promise.all(cacheInfo).then(info => {
+                        Promise.all(cachePromises).then(info => {
                             document.getElementById('cache-list').innerHTML = 
-                                info.join('<br>') + ' ✅';
+                                `Found ${cacheNames.length} cache(s) ✅`;
                             document.getElementById('cache-status').classList.add('success');
+                            document.getElementById('cache-details').textContent = 
+                                info.join('\n\n');
                         });
                     }
                 });
             } else {
-                document.getElementById('cache-list').textContent = 
+                document.getElementById('cache-list').innerHTML = 
                     'Cache API not supported ❌';
+                document.getElementById('cache-status').classList.add('error');
             }
         }
         
@@ -128,10 +195,22 @@
                 if (registration) {
                     registration.unregister().then(() => {
                         console.log('SW unregistered');
+                        // Clear all caches
+                        caches.keys().then(names => {
+                            names.forEach(name => caches.delete(name));
+                        });
                         location.reload();
                     });
                 }
             });
+        }
+        
+        // 6. Test offline mode
+        function testOffline() {
+            if (confirm('Aktifkan mode offline? Halaman akan di-refresh.')) {
+                // Enable offline mode in DevTools
+                alert('Silakan centang "Offline" di DevTools Network tab,\nkemudian refresh halaman untuk test.');
+            }
         }
         
         // Initial check
