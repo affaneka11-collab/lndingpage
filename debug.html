@@ -1,39 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Offline Page</title>
     <link rel="manifest" href="/manifest.json">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .status-box {
+            background: #f0f0f0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
 </head>
 <body>
-    <h1>Website Utama</h1>
-    <p>Status: <span id="status">Online</span></p>
-    <p>SW Status: <span id="sw-status">Checking...</span></p>
+    <h1>Debug Service Worker</h1>
+    
+    <div class="status-box info">
+        <strong>Network Status:</strong> <span id="network-status">Checking...</span>
+    </div>
+    
+    <div class="status-box info">
+        <strong>Service Worker Support:</strong> <span id="sw-support">Checking...</span>
+    </div>
+    
+    <div class="status-box" id="sw-register-status">
+        <strong>Service Worker Registration:</strong> <span id="sw-register">Checking...</span>
+    </div>
+    
+    <div class="status-box" id="cache-status">
+        <strong>Cache Status:</strong> <span id="cache-list">Checking...</span>
+    </div>
+    
+    <button onclick="checkCache()" style="padding: 10px 20px; cursor: pointer;">
+        Refresh Cache Info
+    </button>
+    
+    <button onclick="unregisterSW()" style="padding: 10px 20px; cursor: pointer;">
+        Unregister SW & Refresh
+    </button>
     
     <script>
-        // Update status online/offline
-        function updateStatus() {
-            document.getElementById('status').textContent = 
-                navigator.onLine ? 'Online' : 'Offline';
+        // 1. Check network status
+        function updateNetworkStatus() {
+            document.getElementById('network-status').textContent = 
+                navigator.onLine ? 'Online 🟢' : 'Offline 🔴';
+        }
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        updateNetworkStatus();
+        
+        // 2. Check SW support
+        if ('serviceWorker' in navigator) {
+            document.getElementById('sw-support').textContent = 'Supported ✅';
+            document.getElementById('sw-support').parentElement.classList.add('success');
+        } else {
+            document.getElementById('sw-support').textContent = 'Not Supported ❌';
+            document.getElementById('sw-support').parentElement.classList.add('error');
         }
         
-        window.addEventListener('online', updateStatus);
-        window.addEventListener('offline', updateStatus);
-        updateStatus();
-        
-        // Register Service Worker
+        // 3. Register Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
-                .then(reg => {
-                    console.log('SW registered:', reg);
-                    document.getElementById('sw-status').textContent = 'Registered';
+                .then(registration => {
+                    console.log('SW registered:', registration);
+                    document.getElementById('sw-register').textContent = 
+                        `Registered (Scope: ${registration.scope}) ✅`;
+                    document.getElementById('sw-register-status').classList.add('success');
+                    
+                    // Check if controlling
+                    if (navigator.serviceWorker.controller) {
+                        console.log('SW is controlling the page');
+                    }
                 })
-                .catch(err => {
-                    console.error('SW registration failed:', err);
-                    document.getElementById('sw-status').textContent = 'Failed: ' + err.message;
+                .catch(error => {
+                    console.error('SW registration failed:', error);
+                    document.getElementById('sw-register').textContent = 
+                        `Failed: ${error.message} ❌`;
+                    document.getElementById('sw-register-status').classList.add('error');
                 });
-        } else {
-            document.getElementById('sw-status').textContent = 'Not supported';
         }
+        
+        // 4. Check cache
+        function checkCache() {
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    console.log('Cache names:', cacheNames);
+                    if (cacheNames.length === 0) {
+                        document.getElementById('cache-list').textContent = 
+                            'No cache found ❌';
+                        document.getElementById('cache-status').classList.add('error');
+                    } else {
+                        const cacheInfo = cacheNames.map(name => {
+                            return caches.open(name).then(cache => {
+                                return cache.keys().then(keys => {
+                                    return `${name}: ${keys.length} files`;
+                                });
+                            });
+                        });
+                        Promise.all(cacheInfo).then(info => {
+                            document.getElementById('cache-list').innerHTML = 
+                                info.join('<br>') + ' ✅';
+                            document.getElementById('cache-status').classList.add('success');
+                        });
+                    }
+                });
+            } else {
+                document.getElementById('cache-list').textContent = 
+                    'Cache API not supported ❌';
+            }
+        }
+        
+        // 5. Unregister SW
+        function unregisterSW() {
+            navigator.serviceWorker.getRegistration().then(registration => {
+                if (registration) {
+                    registration.unregister().then(() => {
+                        console.log('SW unregistered');
+                        location.reload();
+                    });
+                }
+            });
+        }
+        
+        // Initial check
+        checkCache();
     </script>
 </body>
 </html>
