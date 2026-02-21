@@ -1,17 +1,16 @@
 const CACHE_NAME = 'my-app-v1';
-const REPO_NAME = 'lndingpage'; // Ganti dengan nama repository Anda
 
-// Path dasar
-const BASE_PATH = REPO_NAME ? `/${REPO_NAME}` : '';
+// Untuk custom domain: path langsung dari root
+const BASE_PATH = '';  // Kosong karena menggunakan custom domain
 
 const urlsToCache = [
-    `${BASE_PATH}/`,
-    `${BASE_PATH}/debug.html`,
-    `${BASE_PATH}/offline.html`,
-    `${BASE_PATH}/manifest.json`
+    '/',
+    '/debug.html',
+    '/offline.html',
+    '/manifest.json'
 ];
 
-const OFFLINE_URL = `/offline.html`;
+const OFFLINE_URL = '/offline.html';
 
 console.log('SW: Starting...');
 console.log('SW: Base path:', BASE_PATH);
@@ -30,7 +29,7 @@ self.addEventListener('install', event => {
                     })
                     .catch(err => {
                         console.error('SW: Cache addAll failed:', err);
-                        // Coba cache satu per satu untuk debug
+                        // Debug: coba cache satu per satu
                         return Promise.all(
                             urlsToCache.map(url => {
                                 console.log('SW: Trying to cache:', url);
