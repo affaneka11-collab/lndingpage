@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Offline Page</title>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <h1>Website Utama</h1>
+    <p>Status: <span id="status">Online</span></p>
+    <p>SW Status: <span id="sw-status">Checking...</span></p>
+    
+    <script>
+        // Update status online/offline
+        function updateStatus() {
+            document.getElementById('status').textContent = 
+                navigator.onLine ? 'Online' : 'Offline';
+        }
+        
+        window.addEventListener('online', updateStatus);
+        window.addEventListener('offline', updateStatus);
+        updateStatus();
+        
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => {
+                    console.log('SW registered:', reg);
+                    document.getElementById('sw-status').textContent = 'Registered';
+                })
+                .catch(err => {
+                    console.error('SW registration failed:', err);
+                    document.getElementById('sw-status').textContent = 'Failed: ' + err.message;
+                });
+        } else {
+            document.getElementById('sw-status').textContent = 'Not supported';
+        }
+    </script>
+</body>
+</html>
