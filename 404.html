@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website - BenevolentClass</title>
+    <title>Not Found - BenevolentClass</title>
     <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
     <link rel="stylesheet" href="styleutama.css">
     <script src="theme.js"></script>
@@ -74,7 +74,7 @@
 </head>
 <body>
     <header>
-        <nav id="main-nav" style="display: none;">
+        <nav id="main-nav">
             <div class="nav-left">
                 <img src="img/logo.png" alt="Logo" class="nav-logo">
                 <span class="nav-text">Kelas 8 Benevolent</span>
@@ -93,13 +93,135 @@
             </div>
         </nav>
     </header>
+    
     <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <h1 style="text-align: center; font-size:70px; color: #000000;">ERR-404</h1>
         <h1 style="text-align: center; font-size: 30px; color: #a0a0a0;">Halaman tidak ditemukan</h1>
         <p style="text-align: center; font-size: 18px; color: #666;">Maaf, sepertinya kamu salah memasukan URL,</p>
         <p style="text-align: center; font-size: 16px; color: #666;">Silakan periksa kembali URL atau kembali ke <a href="index">beranda</a>.</p>
     </div>
-    <footer>
+    <footer style="bottom: 0px; position: fixed; width: 100%; padding: 10px 0;">
+        <p style="text-align: center; font-size: 14px; color: #999;">&copy; 2026 Kelas 8 Benevolent. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.getElementById('hamburger');
+        const navRight = document.getElementById('navRight');
+        if (hamburger && navRight) {
+            hamburger.addEventListener('click', function() {
+                hamburger.classList.toggle('active');
+                navRight.classList.toggle('show');
+            });
+        }
+    });
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Found - BenevolentClass</title>
+    <link rel="icon" href="img/logo.png" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="styleutama.css">
+    <script src="theme.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+    <style>
+        main {
+            opacity: 1;
+            margin-top: 80px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        /* Tambahan CSS untuk hamburger menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-color);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-right {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--nav-bg);
+                padding: 10px 0;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            .nav-right.show {
+                display: flex;
+            }
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+    <header>
+        <nav id="main-nav">
+            <div class="nav-left">
+                <img src="img/logo.png" alt="Logo" class="nav-logo">
+                <span class="nav-text">Kelas 8 Benevolent</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-right" id="navRight">
+                <a href="index.html">🏠 Main Menu</a>
+                <a href="prestasi.html">🏆 Prestasi</a>
+                <a href="karya-siswa.html">🎨 Karya Siswa</a>
+                <a href="#tntngsklh">🏫 Tentang Sekolah</a>
+                <a id="setting" href="settings.html">⚙️ Settings</a>
+            </div>
+        </nav>
+    </header>
+    
+    <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h1 style="text-align: center; font-size:70px; color: #000000;">ERR-404</h1>
+        <h1 style="text-align: center; font-size: 30px; color: #a0a0a0;">Halaman tidak ditemukan</h1>
+        <p style="text-align: center; font-size: 18px; color: #666;">Maaf, sepertinya kamu salah memasukan URL,</p>
+        <p style="text-align: center; font-size: 16px; color: #666;">Silakan periksa kembali URL atau kembali ke <a href="index">beranda</a>.</p>
+    </div>
+    <footer style="bottom: 0px; position: fixed; width: 100%; padding: 10px 0;">
         <p style="text-align: center; font-size: 14px; color: #999;">&copy; 2026 Kelas 8 Benevolent. All rights reserved.</p>
     </footer>
     <script>
